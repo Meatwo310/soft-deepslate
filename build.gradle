@@ -179,6 +179,8 @@ jar {
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
     }
+    // jarファイルの名前をカスタマイズ
+    archiveFileName = "${project.archivesBaseName}-forge-mc1.18.2-${project.version}.jar"
 }
 
 //// Example configuration to allow publishing using the maven-publish plugin

@@ -1,5 +1,5 @@
 # Soft Deepslate
-A Minecraft MOD that adjusts the mining speed of Deepslate to be equivalent to that of Stone.  
+A Minecraft MOD that adjusts the mining speed of Deepslate to be the same as that of stone.  
 Target blocks and speed can be changed by config.  
 
 深層岩を石と同等の採掘速度に調整するMinecraftのMOD。  

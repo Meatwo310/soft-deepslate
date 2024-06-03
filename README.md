@@ -17,5 +17,5 @@ MOD導入時のデフォルト設定では、深層岩や深層岩の丸石が�
 深層岩の鉱石ブロックや建材も同様に採掘速度が調整されます。  
 調整対象となるブロックIDやブロックタグはコンフィグで指定可能です。
 
-# Versions
+## Versions / バージョン
 - [1.18.2-forge](https://github.com/Meatwo310/soft-deepslate/tree/1.18.2-forge)

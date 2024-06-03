@@ -4,20 +4,20 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.List;
 
-public class SoftDeepslateCommonConfigs {
-    public static final ForgeConfigSpec COMMON_SPEC;
-    public static ForgeConfigSpec.ConfigValue<Float> multiplierEntry;
+public class SoftDeepslateServerConfigs {
+    public static final ForgeConfigSpec SERVER_SPEC;
+    public static ForgeConfigSpec.DoubleValue multiplierEntry;
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> blockIDsEntry;
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> blockTags;
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
 
-        builder.push("Common");
         multiplierEntry = builder
                 .comment("Determines how fast the mining speed will be.\n" +
                         "Note that Deepslate is mined at half the speed of Stone in Vanilla.")
-                .define("multiplier", 2.0F, o -> o instanceof Float);
+                .defineInRange("multiplier", 2.0D, 0.0D, Float.MAX_VALUE);
+
         blockIDsEntry = builder
                 .comment("List of block IDs where this mod adjusts the mining speed.")
                 .defineList("block_ids", List.of(
@@ -52,8 +52,7 @@ public class SoftDeepslateCommonConfigs {
                 .defineList("block_tags", List.of(
                         "forge:ores_in_ground/deepslate"
                 ), o -> o instanceof String);
-        builder.pop();
 
-        COMMON_SPEC = builder.build();
+        SERVER_SPEC = builder.build();
     }
 }

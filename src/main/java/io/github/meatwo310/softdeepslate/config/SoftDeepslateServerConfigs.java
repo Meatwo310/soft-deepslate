@@ -46,12 +46,12 @@ public class SoftDeepslateServerConfigs {
                         "minecraft:polished_deepslate_slab",
                         "minecraft:deepslate_brick_slab",
                         "minecraft:deepslate_tile_slab"
-                ), o -> o instanceof String);
+                ), entry -> true);
         blockTags = builder
                 .comment("List of Block Tags (not Item Tags) where this mod adjusts the mining speed.")
                 .defineList("block_tags", List.of(
                         "forge:ores_in_ground/deepslate"
-                ), o -> o instanceof String);
+                ), entry -> true);
 
         SERVER_SPEC = builder.build();
     }

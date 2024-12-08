@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "softdeepslate",
+  "version": "${version}",
+  "name": "Soft Deepslate",
+  "description": "Makes deepslate softer and easier to mine.",
+  "authors": [],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/softdeepslate/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "io.github.meatwo310.tsukichat.softdeepslate.client.SoftDeepslateClient"
+    ],
+    "main": [
+      "io.github.meatwo310.tsukichat.softdeepslate.SoftDeepslate"
+    ]
+  },
+  "mixins": [
+    "softdeepslate.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}",
+    "forgeconfigapiport": "*"
+  },
+  "suggests": {
+    "modmenu": "*"
+  }
+}

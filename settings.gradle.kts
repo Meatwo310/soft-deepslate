@@ -10,4 +10,4 @@ plugins {
 
 rootProject.name = "custom-mdk"
 
-include("neo-26.1")
+include("26.1-neo")

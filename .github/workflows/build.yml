@@ -33,7 +33,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           path: |
-            neo-26.1/build/libs/
+            */build/libs/
           name: artifact
 
   release:

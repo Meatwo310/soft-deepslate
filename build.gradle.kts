@@ -21,7 +21,7 @@ object ModConfig {
     const val MOD_GROUP_ID = "net.meatwo310.softdeepslate"
     const val MOD_AUTHORS = "Meatwo310"
     const val MOD_DESCRIPTION = "Makes deepslate softer and easier to mine."
-    const val MOD_DISPLAY_URL = "https://github.com/Meatwo310/custom-mdk"
+    const val MOD_DISPLAY_URL = "https://github.com/Meatwo310/soft-deepslate"
     const val MOD_ISSUE_TRACKER_URL = "${MOD_DISPLAY_URL}/issues"
     const val MOD_CREDITS = ""
 }

@@ -191,3 +191,8 @@ idea {
         isDownloadJavadoc = true
     }
 }
+
+tasks.withType<JavaExec> {
+    standardInput = System.`in`
+}
+

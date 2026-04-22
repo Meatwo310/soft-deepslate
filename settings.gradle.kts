@@ -11,3 +11,4 @@ plugins {
 rootProject.name = "custom-mdk"
 
 include("26.1-neo")
+include("1.20.1-forge")

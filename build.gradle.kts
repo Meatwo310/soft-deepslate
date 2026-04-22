@@ -17,7 +17,7 @@ object ModConfig {
     const val MOD_ID = "softdeepslate"
     const val MOD_NAME = "Soft Deepslate"
     const val MOD_LICENSE = "MIT"
-    const val MOD_VERSION = "1.0.2"
+    const val MOD_VERSION = "2.0.0"
     const val MOD_GROUP_ID = "net.meatwo310.softdeepslate"
     const val MOD_AUTHORS = "Meatwo310"
     const val MOD_DESCRIPTION = "Makes deepslate softer and easier to mine."

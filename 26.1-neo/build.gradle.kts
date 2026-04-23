@@ -122,7 +122,7 @@ neoForge {
 
         create("data") {
             clientData()
-            // gameDirectory = project.file("run-data")
+            gameDirectory = project.file("run-data")
             programArguments.addAll(
                 "--mod", modId,
                 "--all",

@@ -23,6 +23,8 @@ val modDescription: String by project
 val modDisplayUrl: String by project
 val modIssueTrackerUrl: String by project
 val modCredits: String by project
+val modFabricEntrypoint: String by project
+val modFabricClientEntrypoint: String by project
 
 version = "v$modVersion"
 group = modGroupId
@@ -109,8 +111,8 @@ val generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
         "mod_display_url" to JsonOutput.toJson(modDisplayUrl),
         "mod_issue_tracker_url" to JsonOutput.toJson(modIssueTrackerUrl),
         "mod_credits" to JsonOutput.toJson(modCredits),
-        "mod_entrypoint" to JsonOutput.toJson("net.meatwo310.examplemod.ExampleMod"),
-        "mod_client_entrypoint" to JsonOutput.toJson("net.meatwo310.examplemod.client.ExampleModClient"),
+        "mod_entrypoint" to JsonOutput.toJson(modFabricEntrypoint),
+        "mod_client_entrypoint" to JsonOutput.toJson(modFabricClientEntrypoint),
     )
     inputs.properties(replaceProperties)
     expand(replaceProperties)

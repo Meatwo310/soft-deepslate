@@ -12,9 +12,6 @@ public class ExampleMod {
 //        ctx.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
     }
 
-    /// Utility method to create a [ResourceLocation] with the namespace of this mod.
-    /// @param path Path of the resource. Example: `"example_item"`
-    /// @return [ResourceLocation] with the namespace of this mod and the given path. Example: `examplemod:example_item`
     public static ResourceLocation id(String path) {
         return ResourceLocation.fromNamespaceAndPath(MODID, path);
     }

@@ -1,0 +1,104 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      minecraft_version:
+        description: 'Minecraft version'
+        required: true
+        type: choice
+        options:
+          - '1.20.1'
+          - '1.21.1'
+          - '26.1'
+      loader:
+        description: 'Mod loader'
+        required: true
+        type: choice
+        options:
+          - fabric
+          - forge
+          - neo
+      bump:
+        description: 'Version bump type'
+        required: true
+        type: choice
+        options:
+          - none
+          - patch
+          - minor
+          - major
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Validate subproject
+        run: |
+          SUBPROJECT="${{ inputs.minecraft_version }}-${{ inputs.loader }}"
+          if [ ! -d "$SUBPROJECT" ]; then
+            echo "::error::Subproject '$SUBPROJECT' does not exist."
+            exit 1
+          fi
+          echo "SUBPROJECT=$SUBPROJECT" >> "$GITHUB_ENV"
+
+      - name: Compute new version
+        run: |
+          CURRENT=$(grep '^modVersion=' gradle.properties | cut -d'=' -f2)
+          MAJOR=$(echo "$CURRENT" | cut -d'.' -f1)
+          MINOR=$(echo "$CURRENT" | cut -d'.' -f2)
+          PATCH=$(echo "$CURRENT" | cut -d'.' -f3)
+
+          case "${{ inputs.bump }}" in
+            major) MAJOR=$((MAJOR + 1)); MINOR=0; PATCH=0 ;;
+            minor) MINOR=$((MINOR + 1)); PATCH=0 ;;
+            patch) PATCH=$((PATCH + 1)) ;;
+            none)  ;;
+          esac
+
+          NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+          echo "CURRENT_VERSION=$CURRENT" >> "$GITHUB_ENV"
+          echo "NEW_VERSION=$NEW_VERSION" >> "$GITHUB_ENV"
+
+      - name: Update modVersion in gradle.properties
+        run: |
+          sed -i "s/^modVersion=.*/modVersion=$NEW_VERSION/" gradle.properties
+
+      - name: Setup JDK 25
+        uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'jetbrains'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Build subproject
+        run: chmod u+x ./gradlew && ./gradlew ":$SUBPROJECT:build"
+
+      - name: Commit, tag and push
+        run: |
+          TAG="${SUBPROJECT}-v${NEW_VERSION}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add gradle.properties
+          git commit -m "release: ${SUBPROJECT} v${NEW_VERSION}"
+          git tag "$TAG"
+          git push origin HEAD --tags
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ env.SUBPROJECT }}-v${{ env.NEW_VERSION }}
+          generate_release_notes: true
+          files: ${{ env.SUBPROJECT }}/build/libs/*.jar

@@ -149,3 +149,7 @@ loom {
         ideConfigGenerated(true)
     }
 }
+
+tasks.withType<JavaExec> {
+    standardInput = System.`in`
+}

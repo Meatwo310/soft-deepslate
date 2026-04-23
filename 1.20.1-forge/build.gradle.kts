@@ -8,8 +8,8 @@ plugins {
 /// Version-specific Settings ///
 val minecraftVersion = "1.20.1"
 val minecraftVersionRange = "[1.20.1, 1.21)"
-val forgeVersion = "47.1.3"
-val forgeVersionRange = "[47.1.3,)"
+val forgeVersion = "47.4.10"
+val forgeVersionRange = "[47.4.10,)"
 val loaderVersionRange = "[47,)"
 val parchmentMinecraftVersion = "1.20.1"
 val parchmentMappingsVersion = "2023.09.03"

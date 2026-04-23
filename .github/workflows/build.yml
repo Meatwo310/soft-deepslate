@@ -5,8 +5,32 @@ on:
   pull_request:
 
 jobs:
-  build:
+  detect:
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.detect.outputs.matrix }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Detect submodules from settings.gradle.kts
+        id: detect
+        run: |
+          JSON=$(grep '^include(' settings.gradle.kts \
+            | sed 's/include("//;s/")//' \
+            | jq -R . | jq -sc .)
+          echo "matrix=$JSON" >> "$GITHUB_OUTPUT"
+          echo "Submodules: $JSON"
+
+  build:
+    needs: detect
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        submodule: ${{ fromJson(needs.detect.outputs.matrix) }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -26,11 +50,10 @@ jobs:
         uses: gradle/actions/setup-gradle@v6
 
       - name: Build with Gradle
-        run: chmod u+x ./gradlew && ./gradlew build
+        run: chmod u+x ./gradlew && ./gradlew ":${{ matrix.submodule }}:build"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         with:
-          path: |
-            */build/libs/
-          name: artifact
+          path: ${{ matrix.submodule }}/build/libs/
+          name: artifact-${{ matrix.submodule }}

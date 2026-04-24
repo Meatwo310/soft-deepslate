@@ -103,6 +103,7 @@ tasks.withType<JavaCompile>().configureEach {
             println("Compiling with Java: $javaRuntimeVersion, JVM: $jvmVersion ($vendor)")
         }
     }
+    options.encoding = "UTF-8"
 }
 
 legacyForge {
@@ -184,10 +185,6 @@ val generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
 
 sourceSets.main.get().resources.srcDir(generateModMetadata)
 legacyForge.ideSyncTask(generateModMetadata)
-
-tasks.withType<JavaCompile>().configureEach {
-    options.encoding = "UTF-8"
-}
 
 idea {
     module {

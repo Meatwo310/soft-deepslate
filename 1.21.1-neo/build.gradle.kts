@@ -101,6 +101,7 @@ tasks.withType<JavaCompile>().configureEach {
             println("Compiling with Java: $javaRuntimeVersion, JVM: $jvmVersion ($vendor)")
         }
     }
+    options.encoding = "UTF-8"
 }
 
 neoForge {
@@ -181,10 +182,6 @@ val generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
 
 sourceSets.main.get().resources.srcDir(generateModMetadata)
 neoForge.ideSyncTask(generateModMetadata)
-
-tasks.withType<JavaCompile>().configureEach {
-    options.encoding = "UTF-8"
-}
 
 idea {
     module {

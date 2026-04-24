@@ -44,4 +44,13 @@ subprojects {
         }
         options.encoding = "UTF-8"
     }
+
+    plugins.withId("idea") {
+        configure<org.gradle.plugins.ide.idea.model.IdeaModel> {
+            module {
+                isDownloadSources = true
+                isDownloadJavadoc = true
+            }
+        }
+    }
 }

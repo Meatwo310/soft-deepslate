@@ -107,13 +107,6 @@ tasks.named("sourcesJar") {
 //     }
 // }
 
-idea {
-    module {
-        isDownloadSources = true
-        isDownloadJavadoc = true
-    }
-}
-
 loom {
     runs.configureEach {
         ideConfigGenerated(true)

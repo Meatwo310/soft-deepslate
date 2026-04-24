@@ -126,13 +126,6 @@ val generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
 sourceSets.main.get().resources.srcDir(generateModMetadata)
 neoForge.ideSyncTask(generateModMetadata)
 
-idea {
-    module {
-        isDownloadSources = true
-        isDownloadJavadoc = true
-    }
-}
-
 tasks.withType<JavaExec> {
     standardInput = System.`in`
 }

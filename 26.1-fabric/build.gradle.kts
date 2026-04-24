@@ -122,7 +122,3 @@ fabricApi {
         eula = true
     }
 }
-
-tasks.withType<JavaExec> {
-    standardInput = System.`in`
-}

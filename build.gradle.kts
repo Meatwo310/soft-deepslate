@@ -45,6 +45,12 @@ subprojects {
         options.encoding = "UTF-8"
     }
 
+    afterEvaluate {
+        tasks.withType<JavaExec>().configureEach {
+            standardInput = System.`in`
+        }
+    }
+
     plugins.withId("idea") {
         configure<org.gradle.plugins.ide.idea.model.IdeaModel> {
             module {

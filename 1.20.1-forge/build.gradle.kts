@@ -128,7 +128,3 @@ val generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
 
 sourceSets.main.get().resources.srcDir(generateModMetadata)
 legacyForge.ideSyncTask(generateModMetadata)
-
-tasks.withType<JavaExec> {
-    standardInput = System.`in`
-}

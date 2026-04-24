@@ -35,4 +35,13 @@ subprojects {
         val arch = get("os.arch")
         println("Configuring with Java: $version, JVM: $vmVersion ($vendor), Arch: $arch")
     }
+
+    tasks.withType<JavaCompile>().configureEach {
+        doFirst {
+            with(javaCompiler.get().metadata) {
+                println("Compiling with Java: $javaRuntimeVersion, JVM: $jvmVersion ($vendor)")
+            }
+        }
+        options.encoding = "UTF-8"
+    }
 }

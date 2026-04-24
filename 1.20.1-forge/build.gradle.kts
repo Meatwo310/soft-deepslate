@@ -49,15 +49,6 @@ java.toolchain {
     vendor = JvmVendorSpec.JETBRAINS
 }
 
-tasks.withType<JavaCompile>().configureEach {
-    doFirst {
-        with(javaCompiler.get().metadata) {
-            println("Compiling with Java: $javaRuntimeVersion, JVM: $jvmVersion ($vendor)")
-        }
-    }
-    options.encoding = "UTF-8"
-}
-
 legacyForge {
     version = forgeFullVersion
 

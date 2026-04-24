@@ -17,7 +17,6 @@ val modId: String by project
 val modName: String by project
 val modLicense: String by project
 val modVersion: String by project
-val modGroupId: String by project
 val modAuthors: String by project
 val modDescription: String by project
 val modDisplayUrl: String by project
@@ -26,8 +25,6 @@ val modCredits: String by project
 val modFabricEntrypoint: String by project
 val modFabricClientEntrypoint: String by project
 
-version = "v$modVersion"
-group = modGroupId
 val resolvedVersion = version.toString()
 val resolvedProjectName = project.name
 val generatedModMetadataDir = layout.buildDirectory.dir("generated/sources/modMetadata")
@@ -37,19 +34,6 @@ base {
 }
 
 sourceSets.main.get().resources.srcDir(generatedModMetadataDir)
-
-repositories {
-    exclusiveContent {
-        forRepository {
-            maven {
-                url = uri("https://cursemaven.com")
-            }
-        }
-        filter {
-            includeGroup("curse.maven")
-        }
-    }
-}
 
 loom {
     splitEnvironmentSourceSets()

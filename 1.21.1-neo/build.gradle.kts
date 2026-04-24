@@ -18,57 +18,17 @@ val modId: String by project
 val modName: String by project
 val modLicense: String by project
 val modVersion: String by project
-val modGroupId: String by project
 val modAuthors: String by project
 val modDescription: String by project
 val modDisplayUrl: String by project
 val modIssueTrackerUrl: String by project
 val modCredits: String by project
 
-repositories {
-//    flatDir {
-//        dir("libs")
-//    }
-
-//    maven {
-//        name = "ModMaven"
-//        url = uri("https://modmaven.dev/")
-//    }
-
-//    exclusiveContent {
-//        forRepository {
-//            maven {
-//                name = "Modrinth"
-//                url = uri("https://api.modrinth.com/maven")
-//            }
-//        }
-//        filter {
-//            includeGroup("maven.modrinth")
-//        }
-//    }
-
-    exclusiveContent {
-        forRepository {
-            maven {
-                url = uri("https://cursemaven.com")
-            }
-        }
-        filter {
-            includeGroup("curse.maven")
-        }
-    }
-}
-
 dependencies {
     // Default Dependencies
 
     // Mod Dependencies
 }
-
-/// Project Settings ///
-
-version = "v$modVersion"
-group = modGroupId
 
 sourceSets.main.get().resources {
     srcDir("src/generated/resources")

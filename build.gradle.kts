@@ -27,4 +27,12 @@ subprojects {
             filter { includeGroup("curse.maven") }
         }
     }
+
+    with(System.getProperties()) {
+        val version = get("java.version")
+        val vmVersion = get("java.vm.version")
+        val vendor = get("java.vendor")
+        val arch = get("os.arch")
+        println("Configuring with Java: $version, JVM: $vmVersion ($vendor), Arch: $arch")
+    }
 }

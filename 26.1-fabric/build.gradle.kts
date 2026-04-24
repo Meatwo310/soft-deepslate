@@ -150,6 +150,16 @@ loom {
     }
 }
 
+fabricApi {
+    configureTests {
+        createSourceSet = true
+        modId = "$modId"
+        enableGameTests = true
+        enableClientGameTests = true
+        eula = true
+    }
+}
+
 tasks.withType<JavaExec> {
     standardInput = System.`in`
 }

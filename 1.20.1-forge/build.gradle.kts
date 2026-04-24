@@ -20,57 +20,17 @@ val modId: String by project
 val modName: String by project
 val modLicense: String by project
 val modVersion: String by project
-val modGroupId: String by project
 val modAuthors: String by project
 val modDescription: String by project
 val modDisplayUrl: String by project
 val modIssueTrackerUrl: String by project
 val modCredits: String by project
 
-repositories {
-//    flatDir {
-//        dir("libs")
-//    }
-
-//    maven {
-//        name = "ModMaven"
-//        url = uri("https://modmaven.dev/")
-//    }
-
-//    exclusiveContent {
-//        forRepository {
-//            maven {
-//                name = "Modrinth"
-//                url = uri("https://api.modrinth.com/maven")
-//            }
-//        }
-//        filter {
-//            includeGroup("maven.modrinth")
-//        }
-//    }
-
-    exclusiveContent {
-        forRepository {
-            maven {
-                url = uri("https://cursemaven.com")
-            }
-        }
-        filter {
-            includeGroup("curse.maven")
-        }
-    }
-}
-
 dependencies {
     // Default Dependencies
 
     // Mod Dependencies
 }
-
-/// Project Settings ///
-
-version = "v$modVersion"
-group = modGroupId
 
 sourceSets.main.get().resources {
     srcDir("src/generated/resources")
@@ -87,22 +47,6 @@ java.toolchain {
     languageVersion = JavaLanguageVersion.of(17)
     @Suppress("UnstableApiUsage")
     vendor = JvmVendorSpec.JETBRAINS
-}
-
-with(System.getProperties()) {
-    val version = get("java.version")
-    val vmVersion = get("java.vm.version")
-    val vendor = get("java.vendor")
-    val arch = get("os.arch")
-    println("Configuring with Java: $version, JVM: $vmVersion ($vendor), Arch: $arch")
-}
-
-tasks.withType<JavaCompile>().configureEach {
-    doFirst {
-        with(javaCompiler.get().metadata) {
-            println("Compiling with Java: $javaRuntimeVersion, JVM: $jvmVersion ($vendor)")
-        }
-    }
 }
 
 legacyForge {
@@ -184,18 +128,3 @@ val generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
 
 sourceSets.main.get().resources.srcDir(generateModMetadata)
 legacyForge.ideSyncTask(generateModMetadata)
-
-tasks.withType<JavaCompile>().configureEach {
-    options.encoding = "UTF-8"
-}
-
-idea {
-    module {
-        isDownloadSources = true
-        isDownloadJavadoc = true
-    }
-}
-
-tasks.withType<JavaExec> {
-    standardInput = System.`in`
-}

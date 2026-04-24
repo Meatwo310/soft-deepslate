@@ -17,7 +17,6 @@ val modId: String by project
 val modName: String by project
 val modLicense: String by project
 val modVersion: String by project
-val modGroupId: String by project
 val modAuthors: String by project
 val modDescription: String by project
 val modDisplayUrl: String by project
@@ -26,8 +25,6 @@ val modCredits: String by project
 val modFabricEntrypoint: String by project
 val modFabricClientEntrypoint: String by project
 
-version = "v$modVersion"
-group = modGroupId
 val resolvedVersion = version.toString()
 val resolvedProjectName = project.name
 val generatedModMetadataDir = layout.buildDirectory.dir("generated/sources/modMetadata")
@@ -37,19 +34,6 @@ base {
 }
 
 sourceSets.main.get().resources.srcDir(generatedModMetadataDir)
-
-repositories {
-    exclusiveContent {
-        forRepository {
-            maven {
-                url = uri("https://cursemaven.com")
-            }
-        }
-        filter {
-            includeGroup("curse.maven")
-        }
-    }
-}
 
 loom {
     splitEnvironmentSourceSets()
@@ -74,22 +58,8 @@ java.toolchain {
     vendor = JvmVendorSpec.JETBRAINS
 }
 
-with(System.getProperties()) {
-    val version = get("java.version")
-    val vmVersion = get("java.vm.version")
-    val vendor = get("java.vendor")
-    val arch = get("os.arch")
-    println("Configuring with Java: $version, JVM: $vmVersion ($vendor), Arch: $arch")
-}
-
 tasks.withType<JavaCompile>().configureEach {
-    doFirst {
-        with(javaCompiler.get().metadata) {
-            println("Compiling with Java: $javaRuntimeVersion, JVM: $jvmVersion ($vendor)")
-        }
-    }
     options.release = 25
-    options.encoding = "UTF-8"
 }
 
 java {
@@ -137,13 +107,6 @@ tasks.named("sourcesJar") {
 //     }
 // }
 
-idea {
-    module {
-        isDownloadSources = true
-        isDownloadJavadoc = true
-    }
-}
-
 loom {
     runs.configureEach {
         ideConfigGenerated(true)
@@ -158,8 +121,4 @@ fabricApi {
         enableClientGameTests = true
         eula = true
     }
-}
-
-tasks.withType<JavaExec> {
-    standardInput = System.`in`
 }

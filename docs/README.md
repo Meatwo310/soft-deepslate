@@ -55,4 +55,4 @@ Build a specific platform:
 
 ## License
 
-[MIT](LICENSE)
+[MIT](../LICENSE)

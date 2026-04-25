@@ -14,15 +14,27 @@ plugins {
 
 rootProject.name = "custom-mdk"
 
+
+/// Common ///
 include("common")
+
+/// 1.18.2 ///
 include("1.18.2-common")
 include("1.18.2-forge")
+
+/// 1.19.2 ///
 include("1.19.2-common")
 include("1.19.2-forge")
+
+/// 1.20.1 ///
 include("1.20.1-common")
 include("1.20.1-forge")
+
+/// 1.21.1 ///
 include("1.21.1-common")
 include("1.21.1-neo")
+
+/// 26.1 ///
 include("26.1-common")
 include("26.1-fabric")
 include("26.1-neo")

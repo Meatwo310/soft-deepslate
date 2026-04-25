@@ -1,17 +1,17 @@
 package net.meatwo310.examplemod;
 
-import net.minecraft.resources.ResourceLocation;
+import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import org.slf4j.Logger;
 
 @Mod(Constants.MODID)
 public class ExampleMod {
-    public ExampleMod(IEventBus modEventBus, ModContainer modContainer) {
-//        modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
-    }
+    public static final Logger LOGGER = LogUtils.getLogger();
 
-    public static ResourceLocation id(String path) {
-        return ResourceLocation.fromNamespaceAndPath(Constants.MODID, path);
+    public ExampleMod(IEventBus modEventBus, ModContainer modContainer) {
+        LOGGER.debug(Constants.INITIALIZING, ModUtils.loc("1.21.1-neo"));
+//        modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
     }
 }

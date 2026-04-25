@@ -1,16 +1,16 @@
 package net.meatwo310.examplemod;
 
-import net.minecraft.resources.ResourceLocation;
+import com.mojang.logging.LogUtils;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.slf4j.Logger;
 
 @Mod(Constants.MODID)
 public class ExampleMod {
-    public ExampleMod(FMLJavaModLoadingContext ctx) {
-//        ctx.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
-    }
+    public static final Logger LOGGER = LogUtils.getLogger();
 
-    public static ResourceLocation id(String path) {
-        return ResourceLocation.fromNamespaceAndPath(Constants.MODID, path);
+    public ExampleMod(FMLJavaModLoadingContext ctx) {
+        LOGGER.debug(Constants.INITIALIZING, ModUtils.loc("1.20.1-forge"));
+//        ctx.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
     }
 }

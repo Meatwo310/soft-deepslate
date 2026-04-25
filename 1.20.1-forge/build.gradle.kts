@@ -28,7 +28,7 @@ val modCredits: String by project
 
 dependencies {
     // Default Dependencies
-    implementation(project(":common"))
+    implementation(project(":1.20.1-common"))
 
     // Mod Dependencies
 }
@@ -95,6 +95,7 @@ legacyForge {
     mods {
         create(modId) {
             sourceSet(sourceSets.main.get())
+            sourceSet(project(":1.20.1-common").sourceSets.main.get())
         }
     }
 }

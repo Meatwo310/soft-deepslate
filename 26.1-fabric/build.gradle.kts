@@ -114,9 +114,12 @@ loom {
 }
 
 fabricApi {
+    val testModId = "$modId/test"
+
+    @Suppress("UnstableApiUsage")
     configureTests {
         createSourceSet = true
-        modId = "$modId"
+        modId = testModId
         enableGameTests = true
         enableClientGameTests = true
         eula = true

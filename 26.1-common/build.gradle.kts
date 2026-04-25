@@ -13,7 +13,7 @@ val neoFormVer = "26.1-1"
 val modId: String by project
 
 dependencies {
-    implementation(project(":common"))
+    api(project(":common"))
 }
 
 base {

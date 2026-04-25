@@ -1,6 +1,5 @@
 package net.meatwo310.examplemod;
 
-import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -9,9 +8,5 @@ import net.neoforged.fml.common.Mod;
 public class ExampleMod {
     public ExampleMod(IEventBus modEventBus, ModContainer modContainer) {
 //        modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
-    }
-
-    public static Identifier id(String path) {
-        return Identifier.fromNamespaceAndPath(Constants.MODID, path);
     }
 }

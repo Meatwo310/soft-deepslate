@@ -23,7 +23,7 @@ val modCredits: String by project
 
 dependencies {
     // Default Dependencies
-    implementation(project(":common"))
+    implementation(project(":26.1-common"))
 
     // Mod Dependencies
 }
@@ -85,6 +85,7 @@ neoForge {
     mods {
         create(modId) {
             sourceSet(sourceSets.main.get())
+            sourceSet(project(":26.1-common").sourceSets.main.get())
         }
     }
 }

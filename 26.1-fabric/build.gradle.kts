@@ -48,7 +48,7 @@ dependencies {
     minecraft("com.mojang:minecraft:$minecraftVersion")
     implementation("net.fabricmc:fabric-loader:$loaderVersion")
     implementation("net.fabricmc.fabric-api:fabric-api:$fabricApiVersion")
-    implementation(project(":common"))
+    implementation(project(":26.1-common"))
 }
 
 java.toolchain {

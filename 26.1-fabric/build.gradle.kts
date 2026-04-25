@@ -25,8 +25,6 @@ val modCredits: String by project
 val modFabricEntrypoint: String by project
 val modFabricClientEntrypoint: String by project
 
-val resolvedVersion = version.toString()
-val resolvedProjectName = project.name
 val generatedModMetadataDir = layout.buildDirectory.dir("generated/sources/modMetadata")
 
 base {
@@ -73,7 +71,7 @@ val generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
         "mod_id" to JsonOutput.toJson(modId),
         "mod_name" to JsonOutput.toJson(modName),
         "mod_license" to JsonOutput.toJson(modLicense),
-        "mod_version" to JsonOutput.toJson(resolvedVersion),
+        "mod_version" to JsonOutput.toJson(version.toString()),
         "mod_authors" to JsonOutput.toJson(
             modAuthors.split(",").map { it.trim() }.filter { it.isNotEmpty() }
         ),
@@ -100,10 +98,10 @@ tasks.named("sourcesJar") {
 
 // tasks.jar {
 //     notCompatibleWithConfigurationCache("Renames the bundled LICENSE file per subproject.")
-//     inputs.property("projectName", resolvedProjectName)
+//     inputs.property("projectName", project.name)
 //
 //     from(rootProject.file("LICENSE")) {
-//         rename { "${it}_$resolvedProjectName" }
+//         rename { "${it}_${project.name}" }
 //     }
 // }
 

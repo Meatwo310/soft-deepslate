@@ -22,14 +22,14 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Detect submodules from settings.gradle.kts
+      - name: Detect subprojects from settings.gradle.kts
         id: detect
         run: |
           JSON=$(grep '^include(' settings.gradle.kts \
             | sed 's/include("//;s/")//' \
             | jq -R . | jq -sc .)
           echo "matrix=$JSON" >> "$GITHUB_OUTPUT"
-          echo "Submodules: $JSON"
+          echo "Subprojects: $JSON"
 
   build:
     needs: detect
@@ -37,7 +37,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        submodule: ${{ fromJson(needs.detect.outputs.matrix) }}
+        subproject: ${{ fromJson(needs.detect.outputs.matrix) }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -57,15 +57,15 @@ jobs:
         uses: gradle/actions/setup-gradle@v6
 
       - name: Build with Gradle
-        run: chmod u+x ./gradlew && ./gradlew ":${{ matrix.submodule }}:build"
+        run: chmod u+x ./gradlew && ./gradlew ":${{ matrix.subproject }}:build"
 
       - name: Run Game Tests
-        if: "endsWith(matrix.submodule, 'neo') || endsWith(matrix.submodule, 'forge')"
-        run: ./gradlew ":${{ matrix.submodule }}:runGameTestServer"
+        if: "endsWith(matrix.subproject, 'neo') || endsWith(matrix.subproject, 'forge')"
+        run: ./gradlew ":${{ matrix.subproject }}:runGameTestServer"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7
-        if: "!endsWith(matrix.submodule, 'common')"
+        if: "!endsWith(matrix.subproject, 'common')"
         with:
-          path: ${{ matrix.submodule }}/build/libs/
-          name: artifact-${{ matrix.submodule }}
+          path: ${{ matrix.subproject }}/build/libs/
+          name: artifact-${{ matrix.subproject }}

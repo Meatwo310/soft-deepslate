@@ -6,13 +6,15 @@ A Minecraft mod template supporting multiple mod loaders, managed in a single Gr
 
 | Minecraft | Fabric | Legacy Forge | NeoForge |
 |-----------|:------:|:------------:|:--------:|
-| 1.18.2    |   🚧   |      ✅       |    -     |
-| 1.19.2    |   🚧   |      ✅       |    -     |
-| 1.20.1    |   🚧   |      ✅       |    ❌     |
-| 1.21.1    |   🚧   |      🚧      |    ✅     |
+| 1.18.2    |   ⏳    |    🚧 *1     |    -     |
+| 1.19.2    |   ⏳    |    🚧 *1     |    -     |
+| 1.20.1    |   ⏳    |    🚧 *1     |    ❌     |
+| 1.21.1    |   ⏳    |      ⏳       |    ✅     |
 | 26.1      |   ✅    |      ❌       |    ✅     |
 
-✅ Supported | 🚧 Planned | ❌ Not supported
+✅ Supported | 🚧 Partial support | ⏳ Planned | ❌ Not supported
+
+*1 Mixin is not currently supported.
 
 ## Setup
 

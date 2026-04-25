@@ -113,7 +113,7 @@ loom {
 }
 
 fabricApi {
-    val testModId = "$modId/test"
+    val testModId = "$modId-test"
 
     @Suppress("UnstableApiUsage")
     configureTests {

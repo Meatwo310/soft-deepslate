@@ -9,5 +9,6 @@ public class ExampleMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        LOGGER.debug(Constants.INITIALIZING, ModUtils.id("26.1-fabric"));
     }
 }

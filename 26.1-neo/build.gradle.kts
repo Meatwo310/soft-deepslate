@@ -23,7 +23,7 @@ val modCredits: String by project
 
 dependencies {
     // Default Dependencies
-    implementation(project(":common"))
+    implementation(project(":26.1-common"))
 
     // Mod Dependencies
 }

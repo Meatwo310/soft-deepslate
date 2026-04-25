@@ -21,9 +21,9 @@ Subprojects are the top-level directories corresponding to each platform/version
 | All subprojects equally                      | Scope is optional                                                      |
 | Root-level files only                        | Scope is optional                                                      |
 
-### Valid types
+### Recommended types
 
-`feat` / `fix` / `docs` / `style` / `refactor` / `perf` / `test` / `build` / `ci` / `chore` / `revert`
+`feat` / `fix` / `docs` / `style` / `refactor` / `perf` / `test` / `build` / `ci` / `chore` / `revert` / `release`
 
 ### Examples
 

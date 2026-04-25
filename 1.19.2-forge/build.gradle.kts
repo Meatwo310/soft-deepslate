@@ -130,3 +130,7 @@ val generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
 
 sourceSets.main.get().resources.srcDir(generateModMetadata)
 legacyForge.ideSyncTask(generateModMetadata)
+
+tasks.jar {
+    from(project(":1.19.2-common").sourceSets.main.get().output)
+}

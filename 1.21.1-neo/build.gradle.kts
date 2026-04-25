@@ -127,3 +127,7 @@ val generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
 
 sourceSets.main.get().resources.srcDir(generateModMetadata)
 neoForge.ideSyncTask(generateModMetadata)
+
+tasks.jar {
+    from(project(":1.21.1-common").sourceSets.main.get().output)
+}

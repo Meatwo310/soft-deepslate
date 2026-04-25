@@ -40,8 +40,13 @@ loom {
         create(modId) {
             sourceSet(sourceSets.main.get())
             sourceSet(sourceSets.named("client").get())
+            sourceSet(project(":26.1-common").sourceSets.main.get())
         }
     }
+}
+
+tasks.jar {
+    from(project(":26.1-common").sourceSets.main.get().output)
 }
 
 dependencies {

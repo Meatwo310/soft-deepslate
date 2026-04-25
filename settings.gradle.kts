@@ -14,6 +14,7 @@ plugins {
 
 rootProject.name = "custom-mdk"
 
+include("common")
 include("1.18.2-forge")
 include("1.19.2-forge")
 include("1.20.1-forge")

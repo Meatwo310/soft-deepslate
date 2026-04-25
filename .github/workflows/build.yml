@@ -65,6 +65,7 @@ jobs:
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7
+        if: "!endsWith(matrix.submodule, 'common')"
         with:
           path: ${{ matrix.submodule }}/build/libs/
           name: artifact-${{ matrix.submodule }}

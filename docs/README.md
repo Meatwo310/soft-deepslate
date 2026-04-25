@@ -6,15 +6,16 @@ A Minecraft mod template designed for multi-version & multi-loader development, 
 
 | Minecraft | Fabric | Legacy Forge | NeoForge |
 |-----------|:------:|:------------:|:--------:|
-| 1.18.2    |   ⏳    |    🚧 *1     |    -     |
-| 1.19.2    |   ⏳    |    🚧 *1     |    -     |
-| 1.20.1    |   ⏳    |    🚧 *1     |    ❌     |
+| 1.18.2    |   ⏳    |   🚧 *1 *2   |    -     |
+| 1.19.2    |   ⏳    |   🚧 *1 *2   |    -     |
+| 1.20.1    |   ⏳    |   🚧 *1 *2   |    ❌     |
 | 1.21.1    |   ⏳    |      ⏳       |    ✅     |
 | 26.1      |   ✅    |      ❌       |    ✅     |
 
 ✅ Supported | 🚧 Partial support | ⏳ Planned | ❌ Not supported
 
-*1 Mixin is not currently supported.
+*1 Mixin is not currently supported
+*2 Version-specific common subproject is not implemented
 
 ## Setup
 

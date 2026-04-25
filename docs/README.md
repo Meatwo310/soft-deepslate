@@ -1,6 +1,6 @@
 # custom-mdk template guide
 
-A Minecraft mod template supporting multiple mod loaders, managed in a single Gradle multi-project build.
+A Minecraft mod template designed for multi-version & multi-loader development, powered by a single Gradle multi-project build. Everything is preconfigured out of the box: Kotlin DSL, Mixin support, Parchment mappings, automatic Java toolchain management, versioned artifact naming, and CI/CD workflows.
 
 ## Supported Platforms
 

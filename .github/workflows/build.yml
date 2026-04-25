@@ -54,7 +54,7 @@ jobs:
         run: chmod u+x ./gradlew && ./gradlew ":${{ matrix.submodule }}:build"
 
       - name: Run Game Tests
-        if: "!contains(matrix.submodule, 'fabric')"
+        if: "endsWith(matrix.submodule, 'neo') || endsWith(matrix.submodule, 'forge')"
         run: ./gradlew ":${{ matrix.submodule }}:runGameTestServer"
 
       - name: Upload artifact

@@ -6,14 +6,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ExampleMod implements ModInitializer {
-    public static final String MODID = "examplemod";
-    public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
+    public static final Logger LOGGER = LoggerFactory.getLogger(Constants.MODID);
 
     @Override
     public void onInitialize() {
     }
 
     public static Identifier id(String path) {
-        return Identifier.fromNamespaceAndPath(MODID, path);
+        return Identifier.fromNamespaceAndPath(Constants.MODID, path);
     }
 }

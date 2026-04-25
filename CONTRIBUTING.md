@@ -2,7 +2,7 @@
 
 ## Commit Message Convention
 
-Follow [Conventional Commits](https://www.conventionalcommits.org/):
+Should follow [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
 type(scope): description

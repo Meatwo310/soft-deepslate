@@ -27,10 +27,12 @@ include("1.19.2-forge")
 /// 1.20.1 ///
 include("1.20.1-common")
 include("1.20.1-forge")
+include("1.20.1-fabric")
 
 /// 1.21.1 ///
 include("1.21.1-common")
 include("1.21.1-neo")
+include("1.21.1-fabric")
 
 /// 26.1 ///
 include("26.1-common")

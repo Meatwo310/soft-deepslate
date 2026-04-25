@@ -1,5 +1,6 @@
 plugins {
     id("net.fabricmc.fabric-loom") version "1.16-SNAPSHOT" apply false
+    id("net.fabricmc.fabric-loom-remap") version "1.16-SNAPSHOT" apply false
     id("net.neoforged.moddev") version "2.0.141" apply false
     id("net.neoforged.moddev.legacyforge") version "2.0.141" apply false
 }
@@ -25,6 +26,10 @@ subprojects {
         exclusiveContent {
             forRepository { maven { url = uri("https://cursemaven.com") } }
             filter { includeGroup("curse.maven") }
+        }
+        maven {
+            name = "ParchmentMC"
+            url = uri("https://maven.parchmentmc.org")
         }
     }
 

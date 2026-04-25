@@ -14,8 +14,8 @@ A Minecraft mod template supporting multiple mod loaders, managed in a single Gr
 ## Setup
 
 1. Fork this repository (to update your repo with upstream changes later)
-2. Select the platforms you need in `settings.gradle.kts` by removing unused `include(...)` lines
-3. Edit `gradle.properties` to set your mod's metadata and fabric entry points
+2. Select the platforms you need in `settings.gradle.kts` by removing unused `include(...)` lines to reduce Gradle's configuration and load time
+3. Open in IntelliJ IDEA, then edit `gradle.properties` to set your mod's metadata (and fabric entry points)
 
 ## Building
 

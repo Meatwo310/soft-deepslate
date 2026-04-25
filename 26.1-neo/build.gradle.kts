@@ -85,6 +85,7 @@ neoForge {
     mods {
         create(modId) {
             sourceSet(sourceSets.main.get())
+            sourceSet(project(":26.1-common").sourceSets.main.get())
         }
     }
 }

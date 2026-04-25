@@ -4,12 +4,15 @@ A Minecraft mod template supporting multiple mod loaders, managed in a single Gr
 
 ## Supported Platforms
 
-| Subproject     | Minecraft | Loader       |
-|----------------|-----------|--------------|
-| `26.1-fabric`  | 26.1      | Fabric       |
-| `26.1-neo`     | 26.1      | NeoForge     |
-| `1.21.1-neo`   | 1.21.1    | NeoForge     |
-| `1.20.1-forge` | 1.20.1    | Legacy Forge |
+| Minecraft | Fabric | Legacy Forge | NeoForge |
+|-----------|:------:|:------------:|:--------:|
+| 1.18.2    |   🚧   |      ✅       |    -     |
+| 1.19.2    |   🚧   |      ✅       |    -     |
+| 1.20.1    |   🚧   |      ✅       |    ❌     |
+| 1.21.1    |   🚧   |      🚧      |    ✅     |
+| 26.1      |   ✅    |      ❌       |    ✅     |
+
+✅ Supported | 🚧 Planned | ❌ Not supported
 
 ## Setup
 
@@ -35,10 +38,12 @@ Build a specific platform:
 ## Running
 
 ```sh
+./gradlew :1.18.2-forge:runClient
+./gradlew :1.19.2-forge:runClient
+./gradlew :1.20.1-forge:runClient
+./gradlew :1.21.1-neo:runClient
 ./gradlew :26.1-fabric:runClient
 ./gradlew :26.1-neo:runClient
-./gradlew :1.21.1-neo:runClient
-./gradlew :1.20.1-forge:runClient
 ```
 
 ## Requirements

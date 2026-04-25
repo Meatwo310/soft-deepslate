@@ -8,14 +8,14 @@ A Minecraft mod template designed for multi-version & multi-loader development, 
 |-----------|:------:|:------------:|:--------:|
 | 1.18.2    |   ⏳    |    🚧 *1     |    -     |
 | 1.19.2    |   ⏳    |    🚧 *1     |    -     |
-| 1.20.1    |  🚧*3  |    🚧 *1     |    ❌     |
-| 1.21.1    |  🚧*3  |      ⏳       |    ✅     |
+| 1.20.1    |  🚧*2  |    🚧 *1     |    ❌     |
+| 1.21.1    |  🚧*2  |      ⏳       |    ✅     |
 | 26.1      |   ✅    |      ❌       |    ✅     |
 
 ✅ Supported | 🚧 Partial support | ⏳ Planned | ❌ Not supported
 
 *1 Mixin is not currently supported
-*3 Game Test is not currently supported
+*2 Game Test is not currently supported
 
 ## Setup
 
@@ -53,7 +53,7 @@ Build a specific platform:
 
 ## Requirements
 
-- Java 25 to configure Gradle (JetBrains Runtime recommended)
+- JDK 17+ to configure Gradle (JetBrains Runtime 25 recommended)
 - The Java version used to compile and run the game is automatically downloaded per Minecraft version via [Foojay Toolchain Resolver](https://github.com/gradle/foojay-toolchains) — no manual installation needed
 
 ## Template License

@@ -109,6 +109,9 @@ tasks.named("sourcesJar") {
 loom {
     runs.configureEach {
         ideConfigGenerated(true)
+        if (name == "gameTest") {
+            vmArg("-Dfabric.log.level=debug")
+        }
     }
 }
 

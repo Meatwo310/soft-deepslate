@@ -106,6 +106,27 @@ mixin {
     config("$modId.mixins.json")
 }
 
+// When no @Mixin classes exist, the annotation processor generates no refmap/TSRG output.
+// reobfJar passes the TSRG to ART via --names and fails with FileNotFoundException if missing.
+// This task creates an empty-but-valid placeholder so the build succeeds regardless.
+val ensureMixinRefmap = tasks.register("ensureMixinRefmap") {
+    mustRunAfter(tasks.named("compileJava"))
+    // Resolve to an absolute path String at configuration time to avoid capturing
+    // script object references (which are incompatible with the configuration cache).
+    val tsrgPath = project.layout.buildDirectory.get().asFile.resolve("mixin/$modId.refmap.json.mappings.tsrg").absolutePath
+    doLast {
+        val tsrg = File(tsrgPath)
+        if (!tsrg.exists()) {
+            tsrg.parentFile.mkdirs()
+            tsrg.writeText("tsrg2 left right\n")
+        }
+    }
+}
+
+tasks.named("reobfJar") {
+    dependsOn(ensureMixinRefmap)
+}
+
 configurations {
     val localRuntime by configurations.creating
     runtimeClasspath.get().extendsFrom(localRuntime)

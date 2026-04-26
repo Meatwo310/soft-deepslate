@@ -13,8 +13,12 @@ subprojects {
     val modVersion: String by project
     val modGroupId: String by project
 
-    version = "v$modVersion"
+    version = modVersion
     group = modGroupId
+
+    tasks.withType<AbstractArchiveTask>().configureEach {
+        archiveVersion.set("v$modVersion")
+    }
 
     repositories {
 //        flatDir { dir("libs") }

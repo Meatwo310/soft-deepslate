@@ -1,3 +1,5 @@
+import org.gradle.plugins.ide.idea.model.IdeaModel
+
 plugins {
     id("net.fabricmc.fabric-loom") version "1.16-SNAPSHOT" apply false
     id("net.fabricmc.fabric-loom-remap") version "1.16-SNAPSHOT" apply false
@@ -21,20 +23,42 @@ subprojects {
     }
 
     repositories {
-//        flatDir { dir("libs") }
-//        maven { name = "ModMaven"; url = uri("https://modmaven.dev/") }
-//        exclusiveContent {
-//            forRepository { maven { name = "Modrinth"; url = uri("https://api.modrinth.com/maven") } }
-//            filter { includeGroup("maven.modrinth") }
+//        flatDir {
+//            dir("libs")
 //        }
+
         exclusiveContent {
-            forRepository { maven { url = uri("https://cursemaven.com") } }
-            filter { includeGroup("curse.maven") }
+            forRepository {
+                maven {
+                    url = uri("https://cursemaven.com")
+                }
+            }
+            filter {
+                includeGroup("curse.maven")
+            }
         }
+
+//        exclusiveContent {
+//            forRepository {
+//                maven {
+//                    name = "Modrinth"
+//                    url = uri("https://api.modrinth.com/maven")
+//                }
+//            }
+//            filter {
+//                includeGroup("maven.modrinth")
+//            }
+//        }
+
         maven {
             name = "ParchmentMC"
             url = uri("https://maven.parchmentmc.org")
         }
+
+//        maven {
+//            name = "ModMaven"
+//            url = uri("https://modmaven.dev/")
+//        }
     }
 
     with(System.getProperties()) {
@@ -61,7 +85,7 @@ subprojects {
     }
 
     plugins.withId("idea") {
-        configure<org.gradle.plugins.ide.idea.model.IdeaModel> {
+        configure<IdeaModel> {
             module {
                 isDownloadSources = true
                 isDownloadJavadoc = true

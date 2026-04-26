@@ -139,4 +139,8 @@ legacyForge.ideSyncTask(generateModMetadata)
 
 tasks.jar {
     from(project(":1.20.1-common").sourceSets.main.get().output)
+
+    manifest.attributes(mapOf(
+        "MixinConfigs" to "$modId.mixins.json"
+    ))
 }

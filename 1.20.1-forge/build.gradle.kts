@@ -52,6 +52,7 @@ java.toolchain {
 
 legacyForge {
     version = forgeFullVersion
+    validateAccessTransformers = true
 
     parchment {
         mappingsVersion = parchmentMappingsVersion

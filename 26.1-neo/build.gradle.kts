@@ -46,6 +46,7 @@ java.toolchain {
 
 neoForge {
     version = neoVersion
+    validateAccessTransformers = true
 
     runs {
         create("client") {

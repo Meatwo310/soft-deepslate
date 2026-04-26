@@ -49,6 +49,7 @@ java.toolchain {
 
 neoForge {
     version = neoVersion
+    validateAccessTransformers = true
 
     parchment {
         mappingsVersion = parchmentMappingsVersion

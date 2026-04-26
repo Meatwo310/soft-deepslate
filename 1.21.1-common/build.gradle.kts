@@ -6,7 +6,7 @@ plugins {
 
 /// Version-specific Settings ///
 val minecraftVersion = "1.21.1"
-val neoVersion = "21.1.227"
+val neoFormVer = "1.21.1-20240808.144430"
 
 /// Shared Mod Settings (from root gradle.properties) ///
 val modId: String by project
@@ -26,5 +26,5 @@ java.toolchain {
 }
 
 neoForge {
-    version = neoVersion
+    neoFormVersion = neoFormVer
 }

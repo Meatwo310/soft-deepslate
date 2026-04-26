@@ -6,6 +6,6 @@ public final class ModUtils {
     private ModUtils() {}
 
     public static ResourceLocation loc(String path) {
-        return ResourceLocation.fromNamespaceAndPath(Constants.MODID, path);
+        return new ResourceLocation(Constants.MODID, path);
     }
 }

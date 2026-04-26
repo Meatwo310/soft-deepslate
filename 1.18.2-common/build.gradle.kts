@@ -6,8 +6,7 @@ plugins {
 
 /// Version-specific Settings ///
 val minecraftVersion = "1.18.2"
-val forgeVersion = "40.2.21"
-val forgeFullVersion = "$minecraftVersion-$forgeVersion"
+val mcpVer = minecraftVersion
 
 /// Shared Mod Settings (from root gradle.properties) ///
 val modId: String by project
@@ -27,5 +26,5 @@ java.toolchain {
 }
 
 legacyForge {
-    version = forgeFullVersion
+    mcpVersion = mcpVer
 }

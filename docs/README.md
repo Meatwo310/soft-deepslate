@@ -6,15 +6,14 @@ A Minecraft mod template designed for multi-version & multi-loader development, 
 
 | Minecraft | Fabric | Legacy Forge | NeoForge |
 |-----------|:------:|:------------:|:--------:|
-| 1.18.2    |   ⏳    |    🚧 *1     |    -     |
-| 1.19.2    |   ⏳    |    🚧 *1     |    -     |
-| 1.20.1    |  🚧*2  |    🚧 *1     |    ❌     |
-| 1.21.1    |  🚧*2  |      ⏳       |    ✅     |
+| 1.18.2    |   ⏳    |      ✅       |    -     |
+| 1.19.2    |   ⏳    |      ✅       |    -     |
+| 1.20.1    |  🚧*2  |      ✅       |    ❌     |
+| 1.21.1    |  🚧*2  |      ❌       |    ✅     |
 | 26.1      |   ✅    |      ❌       |    ✅     |
 
 ✅ Supported | 🚧 Partial support | ⏳ Planned | ❌ Not supported
 
-*1 Mixin is not currently supported
 *2 Game Test is not currently supported
 
 ## Setup

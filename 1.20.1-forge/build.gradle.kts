@@ -29,6 +29,7 @@ val modCredits: String by project
 dependencies {
     // Default Dependencies
     implementation(project(":1.20.1-common"))
+    annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
 
     // Mod Dependencies
 }
@@ -98,6 +99,11 @@ legacyForge {
             sourceSet(project(":1.20.1-common").sourceSets.main.get())
         }
     }
+}
+
+mixin {
+    add(sourceSets.main.get(), "$modId.refmap.json")
+    config("$modId.mixins.json")
 }
 
 configurations {

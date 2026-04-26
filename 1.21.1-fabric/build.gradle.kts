@@ -2,7 +2,6 @@ import groovy.json.JsonOutput
 
 plugins {
     `java-library`
-    `maven-publish`
     idea
     id("net.fabricmc.fabric-loom-remap")
 }

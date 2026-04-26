@@ -23,6 +23,10 @@ val javaVersion: String by project
 val commonProject = ":$minecraftVersion-common"
 val generatedModMetadataDir = layout.buildDirectory.dir("generated/sources/modMetadata")
 
+dependencies {
+    implementation(project(commonProject))
+}
+
 base {
     archivesName = "$modId-$minecraftVersion-fabric"
 }

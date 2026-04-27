@@ -10,6 +10,8 @@ A Minecraft mod template designed for multi-version & multi-loader development, 
 | 1.19.2    |   ⏳    |      ✅       |    -     |
 | 1.20.1    |  🚧*2  |      ✅       |    ❌     |
 | 1.21.1    |  🚧*2  |      ❌       |    ✅     |
+| 1.21.8    |  🚧*2  |      ⏳       |    ❌     |
+| 1.21.11   |  🚧*2  |      ⏳       |    ❌     |
 | 26.1      |   ✅    |      ❌       |    ✅     |
 
 ✅ Supported | 🚧 Partial support | ⏳ Planned | ❌ Not supported

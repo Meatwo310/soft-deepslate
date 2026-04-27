@@ -35,6 +35,10 @@ include("1.21.1-common")
 include("1.21.1-neo")
 include("1.21.1-fabric")
 
+/// 1.21.8 ///
+include("1.21.8-common")
+include("1.21.8-fabric")
+
 /// 1.21.11 ///
 include("1.21.11-common")
 include("1.21.11-fabric")

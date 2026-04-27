@@ -145,7 +145,7 @@ val generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
     inputs.properties(replaceProperties)
     expand(replaceProperties)
     from("src/main/templates")
-    into("build/generated/sources/modMetadata")
+    into(layout.buildDirectory.dir("generated/sources/modMetadata"))
 }
 
 sourceSets.main.get().resources.srcDir(generateModMetadata)

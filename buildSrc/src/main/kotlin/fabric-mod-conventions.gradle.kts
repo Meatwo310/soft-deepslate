@@ -40,7 +40,7 @@ val generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
         "mod_id" to JsonOutput.toJson(modId),
         "mod_name" to JsonOutput.toJson(modName),
         "mod_license" to JsonOutput.toJson(modLicense),
-        "mod_version" to JsonOutput.toJson(version.toString()),
+        "mod_version" to JsonOutput.toJson(modVersion),
         "mod_authors" to JsonOutput.toJson(
             modAuthors.split(",").map { it.trim() }.filter { it.isNotEmpty() }
         ),

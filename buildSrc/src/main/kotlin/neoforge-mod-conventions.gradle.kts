@@ -55,8 +55,8 @@ neoForge {
 
     if (parchmentMappingsVersion != null && parchmentMinecraftVersion != null) {
         parchment {
-            mappingsVersion = parchmentMappingsVersion!!
-            minecraftVersion = parchmentMinecraftVersion!!
+            mappingsVersion = parchmentMappingsVersion
+            minecraftVersion = parchmentMinecraftVersion
         }
     }
 
@@ -107,7 +107,7 @@ val generateModMetadata = tasks.register<ProcessResources>("generateModMetadata"
         put("minecraft_version", minecraftVersion)
         put("minecraft_version_range", minecraftVersionRange)
         put("neo_version", neoVersion)
-        if (loaderVersionRange != null) put("loader_version_range", loaderVersionRange!!)
+        if (loaderVersionRange != null) put("loader_version_range", loaderVersionRange)
         put("mod_id", modId)
         put("mod_name", modName)
         put("mod_license", modLicense)

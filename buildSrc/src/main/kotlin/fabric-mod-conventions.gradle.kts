@@ -21,6 +21,8 @@ val loaderVersion: String by project
 val javaVersion: String by project
 
 val commonProject = ":$minecraftVersion-common"
+val sharedCommonProject = ":common"
+evaluationDependsOn(sharedCommonProject)
 val generatedModMetadataDir = layout.buildDirectory.dir("generated/sources/modMetadata")
 
 dependencies {
@@ -80,5 +82,6 @@ tasks.named("sourcesJar") {
 }
 
 tasks.jar {
+    from(project(sharedCommonProject).sourceSets.main.get().output)
     from(project(commonProject).sourceSets.main.get().output)
 }

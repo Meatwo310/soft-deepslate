@@ -8,8 +8,8 @@ import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
 @Mod(value = Constants.MODID, dist = Dist.CLIENT)
-public class ExampleModClient {
-    public ExampleModClient(ModContainer container) {
+public class ModMainClient {
+    public ModMainClient(ModContainer container) {
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
     }
 }

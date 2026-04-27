@@ -6,10 +6,10 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
 @Mod(Constants.MODID)
-public class ExampleMod {
+public class ModMain {
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public ExampleMod(FMLJavaModLoadingContext ctx) {
+    public ModMain(FMLJavaModLoadingContext ctx) {
         LOGGER.debug(Constants.INITIALIZING, ModUtils.loc("1.20.1-forge"));
 //        ctx.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
     }

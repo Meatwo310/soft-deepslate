@@ -26,7 +26,7 @@ A Minecraft mod template designed for multi-version & multi-loader development, 
 
 ## Receiving Upstream Updates
 
-Unlike a fork, a repository created from a template has no automatic link to the upstream. You can still receive updates manually by adding this repository as a remote:
+You can receive updates manually by adding this repository as a remote:
 
 ```sh
 # Run once after creating your repository
@@ -40,7 +40,7 @@ git fetch upstream
 git merge upstream/main
 ```
 
-Resolve any conflicts as needed. Keeping `docs/*` unmodified will minimize conflicts.
+Resolve any conflicts as needed.
 
 ## Building
 

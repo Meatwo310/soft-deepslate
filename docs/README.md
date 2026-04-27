@@ -21,8 +21,8 @@ A Minecraft mod template designed for multi-version & multi-loader development, 
 1. Fork this repository (to update your repo with upstream changes later)
 2. Select the platforms you need in `settings.gradle.kts` by removing unused `include(...)` lines to reduce Gradle's configuration and load time
 3. Open in IntelliJ IDEA, then edit `gradle.properties` to set your mod's metadata (and fabric entry points)
-4. Create a `README.md` *in the repository root*, and update or replace `LICENSE` to reflect your own copyright
-   * Don't edit `docs/README.md` if you want to stay in sync with upstream updates
+4. Create a `README.md` and `LICENSE` **in the repository root**. [Open source licenses](https://opensource.org/licenses) are recommended
+   * Leave `docs/*` unchanged if you want to stay in sync with upstream updates
 
 ## Building
 
@@ -57,4 +57,4 @@ Build a specific platform:
 
 ## Template License
 
-[MIT](https://github.com/Meatwo310/custom-mdk/blob/main/LICENSE) - feel free to relicense your fork and update the copyright holder.
+[MIT](https://github.com/Meatwo310/custom-mdk/blob/main/TEMPLATE-LICENSE) - feel free to relicense your fork

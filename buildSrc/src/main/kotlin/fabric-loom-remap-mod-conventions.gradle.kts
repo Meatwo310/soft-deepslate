@@ -11,6 +11,8 @@ val parchmentMinecraftVersion: String by project
 val parchmentMappingsVersion: String by project
 
 val commonProject = ":$minecraftVersion-common"
+val sharedCommonProject = ":common"
+evaluationDependsOn(sharedCommonProject)
 
 loom {
     splitEnvironmentSourceSets()
@@ -19,6 +21,7 @@ loom {
         create(modId) {
             sourceSet(sourceSets.main.get())
             sourceSet(sourceSets.named("client").get())
+            sourceSet(project(sharedCommonProject).sourceSets.main.get())
             sourceSet(project(commonProject).sourceSets.main.get())
         }
     }

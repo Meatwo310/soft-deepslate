@@ -23,6 +23,8 @@ val parchmentMappingsVersion: String by project
 
 val forgeFullVersion = "$minecraftVersion-$forgeVersion"
 val commonProject = ":$minecraftVersion-common"
+val sharedCommonProject = ":common"
+evaluationDependsOn(sharedCommonProject)
 
 dependencies {
     implementation(project(commonProject))
@@ -96,6 +98,7 @@ legacyForge {
     mods {
         create(modId) {
             sourceSet(sourceSets.main.get())
+            sourceSet(project(sharedCommonProject).sourceSets.main.get())
             sourceSet(project(commonProject).sourceSets.main.get())
         }
     }
@@ -152,6 +155,7 @@ sourceSets.main.get().resources.srcDir(generateModMetadata)
 legacyForge.ideSyncTask(generateModMetadata)
 
 tasks.jar {
+    from(project(sharedCommonProject).sourceSets.main.get().output)
     from(project(commonProject).sourceSets.main.get().output)
     manifest.attributes(mapOf("MixinConfigs" to "$modId.mixins.json"))
 }

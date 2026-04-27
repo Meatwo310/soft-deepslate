@@ -11,6 +11,14 @@ tasks.named<Wrapper>("wrapper").configure {
     distributionType = Wrapper.DistributionType.BIN
 }
 
+with(System.getProperties()) {
+    val version = get("java.version")
+    val vmVersion = get("java.vm.version")
+    val vendor = get("java.vendor")
+    val arch = get("os.arch")
+    println("Configuring with Java: $version, JVM: $vmVersion ($vendor), Arch: $arch")
+}
+
 subprojects {
     val modVersion: String by project
     val modGroupId: String by project
@@ -59,14 +67,6 @@ subprojects {
 //            name = "ModMaven"
 //            url = uri("https://modmaven.dev/")
 //        }
-    }
-
-    with(System.getProperties()) {
-        val version = get("java.version")
-        val vmVersion = get("java.vm.version")
-        val vendor = get("java.vendor")
-        val arch = get("os.arch")
-        println("Configuring with Java: $version, JVM: $vmVersion ($vendor), Arch: $arch")
     }
 
     tasks.withType<JavaCompile>().configureEach {

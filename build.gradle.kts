@@ -1,10 +1,10 @@
 import org.gradle.plugins.ide.idea.model.IdeaModel
 
 plugins {
-    id("net.fabricmc.fabric-loom") version "1.16-SNAPSHOT" apply false
-    id("net.fabricmc.fabric-loom-remap") version "1.16-SNAPSHOT" apply false
-    id("net.neoforged.moddev") version "2.0.141" apply false
-    id("net.neoforged.moddev.legacyforge") version "2.0.141" apply false
+    id("net.fabricmc.fabric-loom") apply false
+    id("net.fabricmc.fabric-loom-remap") apply false
+    id("net.neoforged.moddev") apply false
+    id("net.neoforged.moddev.legacyforge") apply false
 }
 
 tasks.named<Wrapper>("wrapper").configure {

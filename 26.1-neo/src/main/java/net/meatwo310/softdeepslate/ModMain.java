@@ -23,15 +23,11 @@ import java.util.Set;
 
 @Mod(Constants.MODID)
 public class ModMain {
+    private static final Lazy<Set<Block>> blocksCache = Lazy.of(ModMain::buildCache);
+
     public ModMain(IEventBus modEventBus, ModContainer modContainer) {
         Constants.LOGGER.debug(Constants.INITIALIZING, ModUtils.id("26.1-neo"));
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
-    }
-
-    private static final Lazy<Set<Block>> blocksCache = Lazy.of(ModMain::buildCache);
-
-    public static Identifier id(String path) {
-        return Identifier.fromNamespaceAndPath(Constants.MODID, path);
     }
 
     private static Set<Block> buildCache() {

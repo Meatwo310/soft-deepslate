@@ -91,7 +91,7 @@ legacyForge {
 
         configureEach {
             systemProperty("forge.logging.markers", "REGISTRIES")
-            logLevel = org.slf4j.event.Level.DEBUG
+            systemProperty("forge.logging.console.level", "debug")
         }
     }
 

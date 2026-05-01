@@ -7,101 +7,70 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Optional;
 
 @Mod(Constants.MODID)
 public class ModMain {
-    private static final Lazy<Set<Block>> blocksCache = Lazy.of(ModMain::buildCache);
+    private static SoftDeepslateLogic logic;
 
     public ModMain(IEventBus modEventBus, ModContainer modContainer) {
         Constants.LOGGER.debug(Constants.INITIALIZING, ModUtils.id("26.1-neo"));
+        logic = new SoftDeepslateLogic(ServerConfig.INSTANCE, new NeoBlockResolver());
         modContainer.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
-    }
-
-    private static Set<Block> buildCache() {
-        HashSet<Block> blocks = new HashSet<>();
-
-        for (String name : ServerConfig.BLOCKS.get()) {
-            if (name.startsWith("#")) {
-                cacheBlockTag(blocks, name.substring(1));
-            } else {
-                cacheBlock(blocks, name);
-            }
-        }
-
-        if (blocks.isEmpty()) {
-            Constants.LOGGER.warn("No valid blocks found");
-        } else {
-            Constants.LOGGER.info("Cached {} blocks", blocks.size());
-        }
-
-        return Set.copyOf(blocks);
-    }
-
-    private static void cacheBlock(Set<Block> blocks, String blockName) {
-        Identifier id = Identifier.tryParse(blockName);
-        if (id == null) {
-            return;
-        }
-
-        BuiltInRegistries.BLOCK.getOptional(id).ifPresentOrElse(
-                block -> {
-                    Constants.LOGGER.debug("Caching block: {}{}", blockName, blocks.contains(block) ? " (DUPLICATED)" : "");
-                    blocks.add(block);
-                },
-                () -> Constants.LOGGER.warn("Unknown block in config: {}", blockName)
-        );
-    }
-
-    private static void cacheBlockTag(Set<Block> blocks, String blockTagName) {
-        Identifier id = Identifier.tryParse(blockTagName);
-        if (id == null) {
-            return;
-        }
-
-        TagKey<Block> tagKey = TagKey.create(Registries.BLOCK, id);
-        BuiltInRegistries.BLOCK.get(tagKey).ifPresentOrElse(
-                holders -> holders.forEach(holder -> {
-                    Block block = holder.value();
-                    String blockName = holder.unwrapKey()
-                            .map(ResourceKey::identifier)
-                            .map(Identifier::toString)
-                            .orElse("?");
-                    Constants.LOGGER.debug("Caching block from tag #{}: {}{}", blockTagName, blockName, blocks.contains(block) ? " (DUPLICATED)" : "");
-                    blocks.add(block);
-                }),
-                () -> Constants.LOGGER.warn("Unknown block tag in config: #{}", blockTagName)
-        );
-    }
-
-    public static boolean shouldMineFaster(BlockState state) {
-        return blocksCache.get().contains(state.getBlock());
     }
 
     @EventBusSubscriber(modid = Constants.MODID)
     public static class Subscriber {
         @SubscribeEvent
         public static void onPlayerBreakSpeed(PlayerEvent.BreakSpeed event) {
-            if (shouldMineFaster(event.getState())) {
-                event.setNewSpeed((float) (event.getNewSpeed() * ServerConfig.MINING_SPEED.get()));
+            SoftDeepslateLogic logic = logic();
+            if (logic.shouldMineFaster(event.getState())) {
+                event.setNewSpeed((float) (event.getNewSpeed() * logic.miningSpeed()));
             }
         }
 
         @SubscribeEvent
         public static void onTagsUpdated(TagsUpdatedEvent event) {
-            blocksCache.invalidate();
+            logic().invalidateBlockCache();
+        }
+    }
+
+    private static SoftDeepslateLogic logic() {
+        if (logic == null) {
+            throw new IllegalStateException("SoftDeepslateLogic has not been initialized");
+        }
+        return logic;
+    }
+
+    private class NeoBlockResolver implements SoftDeepslateLogic.BlockResolver {
+        @Override
+        public Optional<Block> resolveBlock(Identifier id) {
+            return BuiltInRegistries.BLOCK.getOptional(id);
+        }
+
+        @Override
+        public Optional<? extends Iterable<Block>> resolveTag(Identifier id) {
+            TagKey<Block> tagKey = TagKey.create(Registries.BLOCK, id);
+            return BuiltInRegistries.BLOCK.get(tagKey).map(holders -> holders.stream()
+                    .map(holder -> holder.value())
+                    .toList());
+        }
+
+        @Override
+        public String blockName(Block block) {
+            return BuiltInRegistries.BLOCK.getResourceKey(block)
+                    .map(ResourceKey::identifier)
+                    .map(Identifier::toString)
+                    .orElse("?");
         }
     }
 }

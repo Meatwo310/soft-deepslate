@@ -51,7 +51,7 @@ public class ModMain {
         return logic;
     }
 
-    private class NeoBlockResolver implements SoftDeepslateLogic.BlockResolver {
+    private static class NeoBlockResolver implements SoftDeepslateLogic.BlockResolver {
         @Override
         public Optional<Block> resolveBlock(Identifier id) {
             return BuiltInRegistries.BLOCK.getOptional(id);

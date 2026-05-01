@@ -49,7 +49,7 @@ public class ModMain {
         return logic;
     }
 
-    private class ForgeBlockResolver implements SoftDeepslateLogic.BlockResolver {
+    private static class ForgeBlockResolver implements SoftDeepslateLogic.BlockResolver {
         @Override
         public Optional<Block> resolveBlock(ResourceLocation id) {
             return Optional.ofNullable(ForgeRegistries.BLOCKS.getValue(id));

@@ -10,12 +10,12 @@ import java.util.Optional;
 import java.util.Set;
 
 public final class SoftDeepslateLogic {
-    private final SoftDeepslateSettings settings;
+    private final IModServerConfig config;
     private final BlockResolver blockResolver;
     private volatile Set<Block> blocksCache;
 
-    public SoftDeepslateLogic(SoftDeepslateSettings settings, BlockResolver blockResolver) {
-        this.settings = Objects.requireNonNull(settings);
+    public SoftDeepslateLogic(IModServerConfig config, BlockResolver blockResolver) {
+        this.config = Objects.requireNonNull(config);
         this.blockResolver = Objects.requireNonNull(blockResolver);
     }
 
@@ -24,7 +24,7 @@ public final class SoftDeepslateLogic {
     }
 
     public double miningSpeed() {
-        return settings.miningSpeed();
+        return config.miningSpeed();
     }
 
     public void invalidateBlockCache() {
@@ -48,7 +48,7 @@ public final class SoftDeepslateLogic {
     private Set<Block> buildCache() {
         HashSet<Block> blocks = new HashSet<>();
 
-        for (String name : settings.blocks()) {
+        for (String name : config.blocks()) {
             if (name.startsWith("#")) {
                 cacheBlockTag(blocks, name.substring(1));
             } else {

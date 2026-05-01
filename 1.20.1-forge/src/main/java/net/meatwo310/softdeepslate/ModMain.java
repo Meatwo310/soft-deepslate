@@ -14,6 +14,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.tags.ITag;
 import net.minecraftforge.registries.tags.ITagManager;
 
+import java.util.List;
 import java.util.Optional;
 
 @Mod(Constants.MODID)
@@ -56,11 +57,11 @@ public class ModMain {
         }
 
         @Override
-        public Optional<ITag<Block>> resolveTag(ResourceLocation id) {
+        public Optional<? extends Iterable<Block>> resolveTag(ResourceLocation id) {
             ITagManager<Block> tagManager = ForgeRegistries.BLOCKS.tags();
             if (tagManager == null) {
                 Constants.LOGGER.warn("Block tag manager is not available: #{}", id);
-                return Optional.empty();
+                return Optional.of(List.of());
             }
 
             TagKey<Block> tagKey = tagManager.createTagKey(id);

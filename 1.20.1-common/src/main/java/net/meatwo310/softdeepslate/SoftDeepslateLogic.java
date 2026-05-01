@@ -105,9 +105,7 @@ public final class SoftDeepslateLogic {
 
     public interface BlockResolver {
         Optional<Block> resolveBlock(ResourceLocation id);
-
         Optional<? extends Iterable<Block>> resolveTag(ResourceLocation id);
-
         String blockName(Block block);
     }
 }

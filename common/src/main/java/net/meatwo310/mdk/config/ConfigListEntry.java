@@ -7,8 +7,4 @@ public record ConfigListEntry<T>(
         List<? extends T> defaultValue,
         T newElementValue,
         String comment
-) implements ConfigEntry<List<? extends T>> {
-    public ConfigListEntry<T> withDefaultValue(List<? extends T> defaultValue) {
-        return new ConfigListEntry<>(key, defaultValue, newElementValue, comment);
-    }
-}
+) implements ConfigEntry<List<? extends T>> {}

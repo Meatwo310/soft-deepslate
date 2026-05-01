@@ -1,6 +1,6 @@
 package net.meatwo310.softdeepslate.config;
 
-public interface IModServerConfigValidator {
+public interface ModServerConfigValidator {
     boolean isValidId(String entry);
 
     default boolean isValidIdOrTag(Object entry) {

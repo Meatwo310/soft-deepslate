@@ -1,16 +1,17 @@
 package net.meatwo310.softdeepslate.config;
 
-import net.meatwo310.softdeepslate.IModServerConfig;
+import net.meatwo310.mdk.config.ConfigListEntry;
+import net.meatwo310.mdk.config.ConfigRangeEntry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.List;
 
-public class ServerConfig implements IModServerConfig, IModServerConfigValidator {
+public class ServerConfig implements ModServerConfig, ModServerConfigValidator {
     public static final ServerConfig INSTANCE = new ServerConfig();
 
-    private static final ConfigDoubleEntry MINING_SPEED_ENTRY = ModServerConfigEntries.MINING_SPEED;
-    private static final ConfigStringListEntry BLOCKS_ENTRY = ModServerConfigEntries.BLOCKS.withDefaultValue(List.of(
+    private static final ConfigRangeEntry<Double> MINING_SPEED_ENTRY = ModServerConfigEntries.MINING_SPEED;
+    private static final ConfigListEntry<String> BLOCKS_ENTRY = ModServerConfigEntries.BLOCKS.withDefaultValue(List.of(
             "minecraft:deepslate",
             "#forge:cobblestone/deepslate",
             "#forge:ores_in_ground/deepslate",

@@ -1,5 +1,6 @@
 package net.meatwo310.softdeepslate;
 
+import net.meatwo310.softdeepslate.config.ModServerConfig;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -10,11 +11,11 @@ import java.util.Optional;
 import java.util.Set;
 
 public final class SoftDeepslateLogic {
-    private final IModServerConfig config;
+    private final ModServerConfig config;
     private final BlockResolver blockResolver;
     private volatile Set<Block> blocksCache;
 
-    public SoftDeepslateLogic(IModServerConfig config, BlockResolver blockResolver) {
+    public SoftDeepslateLogic(ModServerConfig config, BlockResolver blockResolver) {
         this.config = Objects.requireNonNull(config);
         this.blockResolver = Objects.requireNonNull(blockResolver);
     }

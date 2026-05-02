@@ -5,34 +5,47 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.List;
 
-public class ServerConfig {
+public class ServerConfig implements ModServerConfig, ModServerConfigValidator {
+    public static final ServerConfig INSTANCE = new ServerConfig();
+
+    private static final List<String> DEFAULT_BLOCKS = List.of(
+            "minecraft:deepslate",
+            "#forge:cobblestone/deepslate",
+            "#forge:ores_in_ground/deepslate",
+            "#softdeepslate:building_blocks"
+    );
+
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
     public static ForgeConfigSpec.DoubleValue MINING_SPEED = BUILDER
-            .comment("""
-                    Adjusts the mining speed for deepslate.
-                    Given that deepslate is twice as hard as stone, a default value of 2.0 allows it to be mined at the same rate as stone.""")
-            .defineInRange("miningSpeed", 2.0D, 0.0D, Float.MAX_VALUE);
+            .comment(ModServerConfigEntries.MINING_SPEED.comment())
+            .defineInRange(
+                    ModServerConfigEntries.MINING_SPEED.key(),
+                    ModServerConfigEntries.MINING_SPEED.defaultValue(),
+                    ModServerConfigEntries.MINING_SPEED.min(),
+                    ModServerConfigEntries.MINING_SPEED.max()
+            );
 
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> BLOCKS = BUILDER
-            .comment("""
-                    List of block IDs or block tags (prefix with #) where this mod adjusts the mining speed.
-                    `/reload` to apply.""")
-            .defineList("blocks", List.of(
-                    "minecraft:deepslate",
-                    "#forge:cobblestone/deepslate",
-                    "#forge:ores_in_ground/deepslate",
-                    "#softdeepslate:building_blocks"
-            ), ServerConfig::isValidIdOrTag);
-
-    private static boolean isValidIdOrTag(Object entry) {
-        return entry instanceof String s && isValidIdOrTag(s);
-    }
-
-    private static boolean isValidIdOrTag(String entry) {
-        String normalized = entry.startsWith("#") ? entry.substring(1) : entry;
-        return ResourceLocation.tryParse(normalized) != null;
-    }
+            .comment(ModServerConfigEntries.BLOCKS.comment())
+            .defineList(ModServerConfigEntries.BLOCKS.key(), DEFAULT_BLOCKS, INSTANCE::isValidIdOrTag);
 
     public static final ForgeConfigSpec SPEC = BUILDER.build();
+
+    private ServerConfig() {}
+
+    @Override
+    public double miningSpeed() {
+        return MINING_SPEED.get();
+    }
+
+    @Override
+    public List<? extends String> blocks() {
+        return BLOCKS.get();
+    }
+
+    @Override
+    public boolean isValidId(String entry) {
+        return ResourceLocation.tryParse(entry) != null;
+    }
 }

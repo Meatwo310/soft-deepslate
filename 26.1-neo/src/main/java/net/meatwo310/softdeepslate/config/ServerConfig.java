@@ -5,34 +5,45 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.List;
 
-public class ServerConfig {
+public class ServerConfig implements ModServerConfig, ModServerConfigValidator {
+    public static final ServerConfig INSTANCE = new ServerConfig();
+
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
     public static ModConfigSpec.DoubleValue MINING_SPEED = BUILDER
-            .comment("""
-                    Adjusts the mining speed for deepslate.
-                    Given that deepslate is twice as hard as stone, a default value of 2.0 allows it to be mined at the same rate as stone.""")
-            .defineInRange("miningSpeed", 2.0D, 0.0D, Float.MAX_VALUE);
+            .comment(ModServerConfigEntries.MINING_SPEED.comment())
+            .defineInRange(
+                    ModServerConfigEntries.MINING_SPEED.key(),
+                    ModServerConfigEntries.MINING_SPEED.defaultValue(),
+                    ModServerConfigEntries.MINING_SPEED.min(),
+                    ModServerConfigEntries.MINING_SPEED.max()
+            );
 
     public static ModConfigSpec.ConfigValue<List<? extends String>> BLOCKS = BUILDER
-            .comment("""
-                    List of block IDs or block tags (prefix with #) where this mod adjusts the mining speed.
-                    `/reload` to apply.""")
-            .defineList("blocks", List.of(
-                    "minecraft:deepslate",
-                    "#c:cobblestones/deepslate",
-                    "#c:ores_in_ground/deepslate",
-                    "#softdeepslate:building_blocks"
-            ), () -> "", ServerConfig::isValidIdOrTag);
-
-    private static boolean isValidIdOrTag(Object entry) {
-        return entry instanceof String s && isValidIdOrTag(s);
-    }
-
-    private static boolean isValidIdOrTag(String entry) {
-        String normalized = entry.startsWith("#") ? entry.substring(1) : entry;
-        return Identifier.tryParse(normalized) != null;
-    }
+            .comment(ModServerConfigEntries.BLOCKS.comment())
+            .defineList(
+                    ModServerConfigEntries.BLOCKS.key(),
+                    ModServerConfigEntries.BLOCKS.defaultValue(),
+                    ModServerConfigEntries.BLOCKS::newElementValue,
+                    INSTANCE::isValidIdOrTag
+            );
 
     public static final ModConfigSpec SPEC = BUILDER.build();
+
+    private ServerConfig() {}
+
+    @Override
+    public double miningSpeed() {
+        return MINING_SPEED.get();
+    }
+
+    @Override
+    public List<? extends String> blocks() {
+        return BLOCKS.get();
+    }
+
+    @Override
+    public boolean isValidId(String entry) {
+        return Identifier.tryParse(entry) != null;
+    }
 }

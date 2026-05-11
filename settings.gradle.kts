@@ -12,7 +12,6 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
-rootProject.name = extra["modId"] as String
 
 /// Common ///
 include("common")

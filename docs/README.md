@@ -13,6 +13,7 @@ A Minecraft mod template designed for multi-version & multi-loader development, 
 | 1.21.8    |  🚧*2  |      ⏳       |    ❌     |
 | 1.21.11   |  🚧*2  |      ⏳       |    ❌     |
 | 26.1      |   ✅    |      ❌       |    ✅     |
+| 26.1.2    |   ✅    |      ❌       |    ✅     |
 
 ✅ Supported | 🚧 Partial support | ⏳ Planned | ❌ Not supported
 

@@ -22,7 +22,7 @@ A Minecraft mod template designed for multi-version & multi-loader development, 
 ## Setup
 
 1. Click **"Use this template"** on GitHub to create your repository from this template
-2. Select the platforms you need in `settings.gradle.kts` by removing unused `include(...)` lines to reduce Gradle's configuration and load time
+2. Select the platforms you need in `settings.gradle.kts` by removing unused `include(...)` lines to reduce Gradle's configuration time and cache usage
 3. Open in IntelliJ IDEA, then edit `gradle.properties` to set your mod's metadata (and fabric entry points)
 4. Create a `README.md` and `LICENSE` **in the repository root**. [Open source licenses](https://opensource.org/licenses) are recommended
    * Leave `docs/*` unchanged if you want to stay in sync with upstream updates

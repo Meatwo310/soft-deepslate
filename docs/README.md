@@ -1,81 +1,196 @@
 # custom-mdk template guide
 
-A Minecraft mod template designed for multi-version & multi-loader development, powered by a single Gradle multi-project build. Everything is preconfigured out of the box: Kotlin DSL, Mixin support, Parchment mappings, automatic Java toolchain management, versioned artifact naming, and CI/CD workflows.
+A Minecraft mod template for multi-version and multi-loader development, powered by a single Gradle multi-project build. It includes Kotlin DSL build logic, shared source sets, Mixin support, Parchment mappings where available, generated mod metadata, versioned artifact names, Java toolchain management, runtime mod staging, and GitHub Actions for build workflows.
 
 ## Supported Platforms
 
-| Minecraft | Fabric | Legacy Forge | NeoForge |
-|-----------|:------:|:------------:|:--------:|
-| 1.18.2    |   ⏳    |      ✅       |    -     |
-| 1.19.2    |   ⏳    |      ✅       |    -     |
-| 1.20.1    |  🚧*2  |      ✅       |    ❌     |
-| 1.21.1    |  🚧*2  |      ❌       |    ✅     |
-| 1.21.8    |  🚧*2  |      ⏳       |    ❌     |
-| 1.21.11   |  🚧*2  |      ⏳       |    ❌     |
-| 26.1      |   ✅    |      ❌       |    ✅     |
-| 26.1.2    |   ✅    |      ❌       |    ✅     |
+| Minecraft | Fabric | Legacy Forge | NeoForge | Quilt |
+|-----------|:------:|:------------:|:--------:|:-----:|
+| <1.18.2   |   🚫   |      🚫      |    -     |  🚫   |
+| 1.18.2    |   ⏳    |      ✅       |    -     |  🚫   |
+| 1.19.2    |   ⏳    |      ✅       |    -     |  🚫   |
+| 1.20.1    |   ✅    |      ✅       |    🚫    |  🚫   |
+| 1.21.1    |   ✅    |      ⏳       |    ✅     |  🚫   |
+| 1.21.8    |   ✅    |      ⏳       |    ❌     |  🚫   |
+| 1.21.11   |   ✅    |      ⏳       |    ❌     |  🚫   |
+| 26.1      |   ✅    |      ❌       |    ✅     |  🚫   |
+| 26.1.2    |   🌟   |      ❌       |    🌟    |  🚫   |
 
-✅ Supported | 🚧 Partial support | ⏳ Planned | ❌ Not supported
+🌟Primary support | ✅ Supported | 🚧 Partial support | ⏳ Planned | ❌ Not supported yet | 🚫 Unsupported
 
-*2 Game Test is not currently supported
+Only the subprojects included in `settings.gradle.kts` are configured. Remove unused `include(...)` lines when you do not need a version or loader.
+
+## Project Layout
+
+- `common`: shared Java code used by every supported target.
+- `<minecraft>-common`: version-specific shared code. Older versions use the Legacy Forge toolchain; 1.21+ and 26.x use NeoForm through NeoForge ModDev.
+- `<minecraft>-fabric`: Fabric loader project.
+- `<minecraft>-forge`: Legacy Forge loader project.
+- `<minecraft>-neo`: NeoForge loader project.
+- `buildSrc`: convention plugins that define loader-specific Gradle behavior.
+- `gradle.properties`: mod metadata shared by generated `mods.toml`, `neoforge.mods.toml`, and `fabric.mod.json` files.
 
 ## Setup
 
-1. Click **"Use this template"** on GitHub to create your repository from this template
-2. Select the platforms you need in `settings.gradle.kts` by removing unused `include(...)` lines to reduce Gradle's configuration time and cache usage
-3. Open in IntelliJ IDEA, then edit `gradle.properties` to set your mod's metadata (and fabric entry points)
-4. Create a `README.md` and `LICENSE` **in the repository root**. [Open source licenses](https://opensource.org/licenses) are recommended
-   * Leave `docs/*` unchanged if you want to stay in sync with upstream updates
+1. Click **Use this template** on GitHub to create your repository from this template.
+2. Edit `settings.gradle.kts` and remove unused subprojects to reduce Gradle configuration time and cache usage.
+3. Edit `gradle.properties` for your mod id, name, version, group, license, authors, URLs, and Fabric entry points.
+4. Update Java package names, `Constants`, entry points, mixin config names, and language assets from `examplemod` to your mod id.
+5. Create a root `README.md` and `LICENSE` for your mod. Keep `docs/*.md` unchanged if you want future template updates to merge cleanly.
+
+## Requirements
+
+- JDK 25 is recommended for configuring Gradle and matches the GitHub Actions build environment.
+- Gradle downloads the toolchain needed by each Minecraft version through Foojay Toolchain Resolver.
+- Version targets currently compile with:
+  - Java 17: `common`, `1.18.2`, `1.19.2`, `1.20.1`
+  - Java 21: `1.21.1`, `1.21.8`, `1.21.11`
+  - Java 25: `26.1`, `26.1.2`
+
+## Building
+
+Build every included subproject on macOS or Linux:
+
+```sh
+./gradlew build
+```
+
+On Windows:
+
+```sh
+./gradlew.bat build
+```
+
+Build a specific platform:
+
+```sh
+./gradlew :26.1.2-fabric:build
+./gradlew :26.1.2-forge:build
+```
+
+Artifacts are written to `<subproject>/build/libs/`. Additional runtime-only mod jars declared through `runtimeMods` are collected in `<subproject>/build/runtimeMods/` for CI.
+
+## Running
+
+Run a client:
+
+```sh
+./gradlew :26.1.2-fabric:runClient
+./gradlew :26.1.2-neo:runClient
+```
+
+Run a server:
+
+```sh
+./gradlew :26.1.2-fabric:runServer
+./gradlew :26.1.2-neo:runServer
+```
+
+## Configuration System
+
+Shared config entries live in `common/src/main/java/.../config`. Define entries with `ConfigEntryBuilder`, collect them as `ConfigEntries`, and expose each file through a `ConfigDeclaration` in `ModConfigs`.
+
+```java
+public final class ServerConfig {
+    private static final ConfigEntryBuilder BUILDER = new ConfigEntryBuilder();
+
+    public static final ConfigEntry.BooleanEntry ENABLE_FEATURE =
+            BUILDER.comment("Enable a server feature")
+                    .define("enableFeature", true);
+
+    public static final ConfigEntries ENTRIES = BUILDER.build();
+
+    private ServerConfig() {}
+}
+```
+
+```java
+public final class ModConfigs {
+    public static final ConfigDeclaration SERVER =
+            ConfigDeclaration.of(ConfigSide.SERVER, ServerConfig.ENTRIES);
+    public static final ConfigDeclaration CLIENT =
+            ConfigDeclaration.of(ConfigSide.CLIENT, ClientConfig.ENTRIES, "examplemod-client-special.toml");
+
+    public static final List<ConfigDeclaration> ALL = List.of(SERVER, CLIENT);
+
+    private ModConfigs() {}
+}
+```
+
+`ConfigSide.SERVER`, `ConfigSide.CLIENT`, and `ConfigSide.COMMON` are mapped to the loader-specific config type by each platform. The optional file name is passed through to the loader API; omit it to use the loader default.
+
+The common config declarations are loader-neutral. Each platform provides the dependency and registrar needed for its target, plus optional client-side helpers when it exposes a config screen:
+
+| Target                 | Required config dependency                            | Registration                                     | Optional config screen dependency                                                                                                                        |
+|------------------------|-------------------------------------------------------|--------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| NeoForge platforms     | NeoForge config API from the loader                   | `ModContainer#registerConfig`                    | none; the config screen is provided by NeoForge directly                                                                                                 |
+| Legacy Forge platforms | Forge config API from the loader                      | `ModLoadingContext` / `FMLJavaModLoadingContext` | [Configured](https://www.curseforge.com/minecraft/mc-mods/configured) or [Forge Config Screens](https://modrinth.com/mod/forge-config-screens)           |
+| Fabric platforms       | Forge Config API Port, declared per Minecraft version | Forge Config API Port registry                   | [ModMenu](https://modrinth.com/mod/modmenu/) for the mod list entry; [Forge Config Screens](https://modrinth.com/mod/forge-config-screens) on <=mc1.20.1 |
+
+Because of this, the same `ConfigDeclaration` list can be shared from `common`, extended by a version-specific common project, and then bound by each platform to the dependency it actually runs with.
+
+The builder supports primitive values, ranged numbers, strings, lists, enums, and nested sections:
+
+```java
+BUILDER.comment("Max stored items")
+        .defineInRange("maxStoredItems", 64, 1, 4096);
+BUILDER.comment("Allowed item ids")
+        .defineList("allowedItems", List.of("minecraft:stone"), () -> "minecraft:stone", value -> value instanceof String);
+BUILDER.comment("Advanced settings")
+        .category("advanced", AdvancedConfig.ENTRIES);
+```
+
+The template registers `ModConfigs.ALL` directly. Use this when every included target can share the same config files:
+
+```java
+PlatformConfigRegistrar.registerAll(modContainer, VersionedConfigSpec.bindAll(ModConfigs.ALL));
+```
+
+Fabric uses the same flow, but passes the mod id instead of the `ModContainer`:
+
+```java
+PlatformConfigRegistrar.registerAll(Constants.MODID, VersionedConfigSpec.bindAll(ModConfig.ALL));
+```
+
+When a version-specific common project such as `26.1.2-common` needs extra entries, append them before a platform binds the declarations:
+
+```java
+public final class VersionedModConfigs {
+    public static final List<ConfigDeclaration> ALL =
+            ConfigDeclarations.append(ModConfigs.ALL, ModConfigs.SERVER, VersionedServerConfig.ENTRIES);
+
+    private VersionedModConfigs() {}
+}
+```
+
+When a platform such as `26.1.2-fabric` or `26.1.2-neo` needs its own entries, append them in the entry point before calling `PlatformConfigRegistrar`:
+
+```java
+var configs = ConfigDeclarations.append(VersionedModConfigs.ALL, ModConfigs.SERVER, NeoServerConfig.ENTRIES);
+PlatformConfigRegistrar.registerAll(modContainer, VersionedConfigSpec.bindAll(configs));
+```
+
+## GitHub Actions
+
+The build workflow detects subprojects from `settings.gradle.kts`, builds each one independently, uploads loader artifacts, runs the available server or game-test smoke checks, and then launches a headless client runtime test with the produced jars. Note: Fabric Game Tests are configured through Fabric Loom and run as part of the Fabric `build` task.
 
 ## Receiving Upstream Updates
 
-You can receive updates manually by adding this repository as a remote:
+Add this repository as an upstream remote once:
 
 ```sh
-# Run once after creating your repository
 git remote add upstream https://github.com/Meatwo310/custom-mdk.git
 ```
 
-Then, whenever you want to pull in new changes:
+Then pull template updates when needed:
 
 ```sh
 git fetch upstream
 git merge upstream/main
 ```
 
-Resolve any conflicts as needed.
-
-## Building
-
-Build all platforms:
-
-```sh
-./gradlew build
-```
-
-Build a specific platform:
-
-```sh
-./gradlew :26.1-fabric:build
-./gradlew :26.1-neo:build
-```
-
-## Running
-
-```sh
-./gradlew :1.18.2-forge:runClient
-./gradlew :1.19.2-forge:runClient
-./gradlew :1.20.1-forge:runClient
-./gradlew :1.21.1-neo:runClient
-./gradlew :26.1-fabric:runClient
-./gradlew :26.1-neo:runClient
-```
-
-## Requirements
-
-- JDK 17+ to configure Gradle (Temurin 25 recommended)
-- The Java version used to compile and run the game is automatically downloaded per Minecraft version via [Foojay Toolchain Resolver](https://github.com/gradle/foojay-toolchains) — no manual installation needed
+Resolve conflicts carefully.
 
 ## Template License
 
-[MIT](https://github.com/Meatwo310/custom-mdk/blob/main/TEMPLATE-LICENSE) - feel free to relicense your project
+[MIT](https://github.com/Meatwo310/custom-mdk/blob/main/TEMPLATE-LICENSE) - feel free to relicense your project.

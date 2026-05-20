@@ -46,17 +46,29 @@ subprojects {
             }
         }
 
-//        exclusiveContent {
-//            forRepository {
-//                maven {
-//                    name = "Modrinth"
-//                    url = uri("https://api.modrinth.com/maven")
-//                }
-//            }
-//            filter {
-//                includeGroup("maven.modrinth")
-//            }
-//        }
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = "Modrinth"
+                    url = uri("https://api.modrinth.com/maven")
+                }
+            }
+            filter {
+                includeGroup("maven.modrinth")
+            }
+        }
+
+        exclusiveContent {
+            forRepository {
+                maven {
+                    name = "Fuzs Mod Resources"
+                    url = uri("https://raw.githubusercontent.com/Fuzss/modresources/main/maven/")
+                }
+            }
+            filter {
+                includeGroupByRegex("fuzs\\..+")
+            }
+        }
 
         maven {
             name = "ParchmentMC"

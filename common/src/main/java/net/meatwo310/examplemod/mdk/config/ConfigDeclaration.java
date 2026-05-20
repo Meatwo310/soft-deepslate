@@ -1,11 +1,11 @@
 package net.meatwo310.examplemod.mdk.config;
 
-import org.jetbrains.annotations.NotNullByDefault;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 
-@NotNullByDefault
+@NullMarked
 public record ConfigDeclaration(ConfigSide side, ConfigEntries entries, @Nullable String fileName) {
     public ConfigDeclaration {
         if (fileName != null) {

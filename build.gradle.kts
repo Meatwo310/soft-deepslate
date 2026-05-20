@@ -31,6 +31,8 @@ subprojects {
     }
 
     repositories {
+        mavenCentral()
+
 //        flatDir {
 //            dir("libs")
 //        }
@@ -88,6 +90,12 @@ subprojects {
             }
         }
         options.encoding = "UTF-8"
+    }
+
+    plugins.withType<JavaLibraryPlugin> {
+        dependencies {
+            add("api", libs.jspecify)
+        }
     }
 
     afterEvaluate {

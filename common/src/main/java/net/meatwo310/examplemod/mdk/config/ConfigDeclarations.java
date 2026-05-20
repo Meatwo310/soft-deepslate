@@ -1,12 +1,12 @@
 package net.meatwo310.examplemod.mdk.config;
 
-import org.jetbrains.annotations.NotNullByDefault;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@NotNullByDefault
+@NullMarked
 public final class ConfigDeclarations {
     private ConfigDeclarations() {}
 

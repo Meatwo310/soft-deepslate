@@ -4,7 +4,7 @@ import net.meatwo310.examplemod.mdk.config.ConfigDeclaration;
 import net.meatwo310.examplemod.mdk.config.ConfigEntries;
 import net.meatwo310.examplemod.mdk.config.ConfigSide;
 import net.meatwo310.examplemod.mdk.config.ConfigEntryBinder;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.List;

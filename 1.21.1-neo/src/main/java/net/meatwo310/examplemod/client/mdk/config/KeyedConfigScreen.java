@@ -16,7 +16,7 @@ import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen.ConfigurationSectionScreen;
 import net.neoforged.neoforge.common.ModConfigSpec.ConfigValue;
 import net.neoforged.neoforge.common.ModConfigSpec.ListValueSpec;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 import java.util.Map;
@@ -41,12 +41,12 @@ public final class KeyedConfigScreen extends ConfigurationSectionScreen {
     }
 
     @Override
-    protected @NotNull MutableComponent getTranslationComponent(@NotNull String key) {
+    protected @NonNull MutableComponent getTranslationComponent(@NonNull String key) {
         return getTranslationComponent(context, key);
     }
 
     @Override
-    protected Element createSection(@NotNull String key, UnmodifiableConfig subconfig, @NotNull UnmodifiableConfig subsection) {
+    protected Element createSection(@NonNull String key, UnmodifiableConfig subconfig, @NonNull UnmodifiableConfig subsection) {
         if (subconfig.isEmpty()) {
             return null;
         }
@@ -59,7 +59,7 @@ public final class KeyedConfigScreen extends ConfigurationSectionScreen {
     }
 
     @Override
-    protected <T> Element createList(@NotNull String key, @NotNull ListValueSpec spec, @NotNull ConfigValue<List<T>> list) {
+    protected <T> Element createList(@NonNull String key, @NonNull ListValueSpec spec, @NonNull ConfigValue<List<T>> list) {
         return new Element(getTranslationComponent(key),
                 getTooltipComponent(key, null),
                 Button.builder(
@@ -122,7 +122,7 @@ public final class KeyedConfigScreen extends ConfigurationSectionScreen {
         }
 
         @Override
-        protected @NotNull MutableComponent getTranslationComponent(@NotNull String key) {
+        protected @NonNull MutableComponent getTranslationComponent(@NonNull String key) {
             return KeyedConfigScreen.getTranslationComponent(context, key);
         }
 

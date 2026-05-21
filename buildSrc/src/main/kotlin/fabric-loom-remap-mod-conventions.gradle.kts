@@ -1,3 +1,8 @@
+import net.meatwo310.mdk.build.VersionCatalogLibrary
+import net.meatwo310.mdk.build.library
+import net.meatwo310.mdk.build.module
+import net.meatwo310.mdk.build.versionCatalog
+
 plugins {
     id("fabric-mod-conventions")
     id("net.fabricmc.fabric-loom-remap")
@@ -8,7 +13,6 @@ val minecraftVersion: String by project
 val fabricApiVersion: String by project
 val parchmentMinecraftVersion: String by project
 val parchmentMappingsVersion: String by project
-val forgeConfigApiPortVersion = project.properties["forgeConfigApiPortVersion"]?.toString()
 
 val commonProject = ":$minecraftVersion-common"
 val sharedCommonProject = ":common"
@@ -40,8 +44,4 @@ dependencies {
     })
     modImplementation(versionCatalog.library(VersionCatalogLibrary.FabricLoader))
     modImplementation("${versionCatalog.module(VersionCatalogLibrary.FabricApi)}:$fabricApiVersion")
-    if (forgeConfigApiPortVersion != null) {
-        modImplementation("${versionCatalog.module(VersionCatalogLibrary.ForgeConfigApiPortFabric)}:$forgeConfigApiPortVersion")
-        add("runtimeMods", "${versionCatalog.module(VersionCatalogLibrary.ForgeConfigApiPortFabric)}:$forgeConfigApiPortVersion")
-    }
 }

@@ -27,6 +27,8 @@ Only the subprojects included in `settings.gradle.kts` are configured. Remove un
 - `<minecraft>-fabric`: Fabric loader project.
 - `<minecraft>-forge`: Legacy Forge loader project.
 - `<minecraft>-neo`: NeoForge loader project.
+- `src/config`: config-related common code that is packaged into the jar but kept out of the default main source set.
+- `src/configClient`: client-only config screen helpers for loaders that expose a config UI.
 - `buildSrc`: convention plugins that define loader-specific Gradle behavior.
 - `gradle.properties`: mod metadata shared by generated `mods.toml`, `neoforge.mods.toml`, and `fabric.mod.json` files.
 
@@ -37,6 +39,12 @@ Only the subprojects included in `settings.gradle.kts` are configured. Remove un
 3. Edit `gradle.properties` for your mod id, name, version, group, license, authors, URLs, and Fabric entry points.
 4. Update Java package names, `Constants`, entry points, mixin config names, and language assets from `examplemod` to your mod id.
 5. Create a root `README.md` and `LICENSE` for your mod. Keep `docs/*.md` unchanged if you want future template updates to merge cleanly.
+
+## Generated Metadata
+
+Fabric `fabric.mod.json` files are generated from shared values in `gradle.properties` and the Fabric convention plugin. The convention provides common fields such as the mod id, version, authors, contact URLs, environment, entry points, Java requirement, Minecraft requirement, Fabric API dependency, and optional Forge Config API Port dependency.
+
+Each `<minecraft>-fabric/src/main/templates/fabric.mod.json` file is a small override JSON. Values written there are merged over the generated defaults, so use it for target-specific metadata or extra dependencies without duplicating the common metadata. Nested objects such as `depends` are merged recursively.
 
 ## Requirements
 
@@ -88,7 +96,22 @@ Run a server:
 
 ## Configuration System
 
-Shared config entries live in `common/src/main/java/.../config`. Define entries with `ConfigEntryBuilder`, collect them as `ConfigEntries`, and expose each file through a `ConfigDeclaration` in `ModConfigs`.
+Shared config entries live in `common/src/config/java/.../config`. Define entries with `ConfigEntryBuilder`, collect them as `ConfigEntries`, and expose each file through a `ConfigDeclaration` in `ModConfigs`.
+
+Config support is split into dedicated source sets so projects that do not opt into the config conventions can avoid resolving the extra config dependencies. Shared config declarations belong in `common/src/config`, version-specific config code belongs in `<minecraft>-common/src/config`, loader bindings belong in `<minecraft>-<loader>/src/config`, and client-only config screen helpers belong in `<minecraft>-<loader>/src/configClient`.
+
+Apply the matching config convention plugin in addition to the normal loader convention when a project needs config support:
+
+| Project type | Config convention |
+|--------------|-------------------|
+| `common` | `common-config-conventions` |
+| Legacy Forge version common | `legacyforge-common-config-conventions` |
+| NeoForge version common | `neoforge-common-config-conventions` |
+| Legacy Forge loader project | `legacyforge-config-conventions` |
+| Fabric loader project | `fabric-config-conventions` |
+| NeoForge loader project | `neoforge-config-conventions` |
+
+These conventions wire the `config` and `configClient` outputs into the jar and into the appropriate compile/runtime classpaths. Fabric config projects also add Forge Config API Port to `implementation`/`modImplementation`, `runtimeMods`, and generated `fabric.mod.json` dependencies.
 
 ```java
 public final class ServerConfig {
@@ -149,7 +172,7 @@ PlatformConfigRegistrar.registerAll(modContainer, VersionedConfigSpec.bindAll(Mo
 Fabric uses the same flow, but passes the mod id instead of the `ModContainer`:
 
 ```java
-PlatformConfigRegistrar.registerAll(Constants.MODID, VersionedConfigSpec.bindAll(ModConfig.ALL));
+PlatformConfigRegistrar.registerAll(Constants.MODID, VersionedConfigSpec.bindAll(ModConfigs.ALL));
 ```
 
 When a version-specific common project such as `26.1.2-common` needs extra entries, append them before a platform binds the declarations:

@@ -14,7 +14,7 @@ on:
 jobs:
   detect:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 30
     outputs:
       matrix: ${{ steps.detect.outputs.matrix }}
     steps:
@@ -49,7 +49,7 @@ jobs:
   build:
     needs: detect
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:

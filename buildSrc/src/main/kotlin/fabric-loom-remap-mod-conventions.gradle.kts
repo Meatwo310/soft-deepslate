@@ -1,6 +1,7 @@
 import net.meatwo310.mdk.build.VersionCatalogLibrary
 import net.meatwo310.mdk.build.library
 import net.meatwo310.mdk.build.module
+import net.meatwo310.mdk.build.supportsGameTestServer
 import net.meatwo310.mdk.build.versionCatalog
 
 plugins {
@@ -32,6 +33,9 @@ loom {
 
     runs.configureEach {
         ideConfigGenerated(true)
+        if (name == "gameTest") {
+            vmArg("-Dfabric.log.level=debug")
+        }
     }
 }
 
@@ -44,4 +48,19 @@ dependencies {
     })
     modImplementation(versionCatalog.library(VersionCatalogLibrary.FabricLoader))
     modImplementation("${versionCatalog.module(VersionCatalogLibrary.FabricApi)}:$fabricApiVersion")
+}
+
+if (minecraftVersion.supportsGameTestServer()) {
+    fabricApi {
+        val testModId = "$modId-test"
+
+        @Suppress("UnstableApiUsage")
+        configureTests {
+            createSourceSet = true
+            modId = testModId
+            enableGameTests = true
+            enableClientGameTests = true
+            eula = true
+        }
+    }
 }

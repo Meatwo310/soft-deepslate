@@ -35,10 +35,12 @@ Only the subprojects included in `settings.gradle.kts` are configured. Remove un
 ## Setup
 
 1. Click **Use this template** on GitHub to create your repository from this template.
-2. Edit `settings.gradle.kts` and remove unused subprojects to reduce Gradle configuration time and cache usage.
-3. Edit `gradle.properties` for your mod id, name, version, group, license, authors, URLs, and Fabric entry points.
-4. Update Java package names, `Constants`, entry points, mixin config names, and language assets from `examplemod` to your mod id.
-5. Create a root `README.md` and `LICENSE` for your mod. Keep `docs/*.md` unchanged if you want future template updates to merge cleanly.
+2. If you want to keep receiving template updates, initialize upstream tracking
+   before regular development. See [Receiving Upstream Updates](#receiving-upstream-updates).
+3. Edit `settings.gradle.kts` and remove unused subprojects to reduce Gradle configuration time and cache usage.
+4. Edit `gradle.properties` for your mod id, name, version, group, license, authors, URLs, and Fabric entry points.
+5. Update Java package names, `Constants`, entry points, mixin config names, and language assets from `examplemod` to your mod id.
+6. Create a root `README.md` and `LICENSE` for your mod. Keep `docs/*.md` unchanged if you want future template updates to merge cleanly.
 
 ## Generated Metadata
 
@@ -199,20 +201,53 @@ The build workflow detects subprojects from `settings.gradle.kts`, builds each o
 
 ## Receiving Upstream Updates
 
-Add this repository as an upstream remote once:
+Repositories created with GitHub's **Use this template** button do not share Git
+history with this template repository. If you want to keep receiving upstream
+template updates, initialize your repository history from `upstream/main` before
+you start regular development.
+
+Add this template repository as an upstream remote:
 
 ```sh
 git remote add upstream https://github.com/Meatwo310/custom-mdk.git
+git fetch upstream
 ```
 
-Then pull template updates when needed:
+Then replace the freshly created local `main` branch with `upstream/main` and
+force-push it to your repository:
+
+```sh
+git switch main
+git reset --hard upstream/main
+git push --force-with-lease origin main
+```
+
+This rewrites the initial repository history. Do this only before other people
+base work on your repository, and save any local changes first.
+
+<details>
+<summary>If downstream development has already started</summary>
+
+If you do not want to rewrite history, merge the template history instead:
+
+```sh
+git merge --allow-unrelated-histories upstream/main
+```
+
+This keeps your existing commits and creates a merge commit that connects the
+two histories. You may need to resolve conflicts when both repositories changed
+the same files.
+
+</details>
+
+After this one-time setup, pull template updates when needed:
 
 ```sh
 git fetch upstream
 git merge upstream/main
 ```
 
-Resolve conflicts carefully.
+Resolve conflicts carefully, then commit the merge.
 
 ## Template License
 

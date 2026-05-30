@@ -10,7 +10,7 @@ plugins {
 object ModConfig {
     // Environment Properties
     const val MINECRAFT_VERSION = "26.1"
-    const val MINECRAFT_VERSION_RANGE = "[26.1]"
+    const val MINECRAFT_VERSION_RANGE = "[26.1,26.2)"
     const val NEO_VERSION = "26.1.0.19-beta"
 
     // Mod Properties

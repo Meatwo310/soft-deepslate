@@ -154,9 +154,6 @@ jobs:
           mkdir -p build/release/libs
           while IFS= read -r subproject; do
             find "$subproject/build/libs" -maxdepth 1 -type f -name '*.jar' \
-              ! -name '*-sources.jar' \
-              ! -name '*-javadoc.jar' \
-              ! -name '*-dev.jar' \
               -exec cp {} build/release/libs/ \;
           done < <(jq -r '.[].subproject' build/ci/build-matrix.json)
           test -n "$(find build/release/libs -maxdepth 1 -type f -name '*.jar' -print -quit)"

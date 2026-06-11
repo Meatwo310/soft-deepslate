@@ -6,7 +6,7 @@ This file maps repository locations to responsibilities.
 
 `settings.gradle.kts`
 
-- Includes every active Gradle subproject.
+- Includes every Gradle subproject that is enabled in this repository.
 - Defines `ciBuildProjectNames` as all children except `common` and `*-common`.
 - Controls which loader projects enter the build and release matrices.
 

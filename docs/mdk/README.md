@@ -25,10 +25,11 @@ The Gradle build is split by Minecraft version and loader:
 - `<mc>-neo` contains NeoForge loader code and metadata for one version.
 - `buildSrc` owns reusable Gradle convention plugins and helper tasks.
 
-The active project list is defined in `settings.gradle.kts`. Do not infer
-supported versions from directory names alone; check the `include(...)` entries.
+The project list for the repository you are editing is defined in
+`settings.gradle.kts`. Do not infer supported versions from directory names
+alone; check that repository's `include(...)` entries.
 
-Current included projects:
+Projects included by default in this template:
 
 - `common`
 - `1.18.2-common`, `1.18.2-forge`
@@ -48,8 +49,8 @@ Current included projects:
 - Each subproject `gradle.properties` stores the target Minecraft version,
   loader versions, Java version, mappings, and runtime dependency versions.
 - `gradle/libs.versions.toml` stores shared plugin and dependency aliases.
-- `settings.gradle.kts` controls which projects exist and which loader projects
-  are included in the CI build matrix.
+- `settings.gradle.kts` controls which projects exist in the current repository
+  and which loader projects are included in the CI build matrix.
 
 ## Generated Metadata
 

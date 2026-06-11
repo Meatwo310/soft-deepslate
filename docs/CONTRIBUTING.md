@@ -46,8 +46,8 @@ feat(fabric): add Mod Menu integration across Fabric targets
 
 ## MDK Template Changes
 
-When committing changes to the MDK template itself, use `mdk` as the type so
-that downstream mod release notes can exclude them.
+When committing changes to the [MDK template itself](https://github.com/Meatwo310/custom-mdk),
+you **MUST** use `mdk` as the type so that downstream mod release notes can exclude them.
 
 For changes that would otherwise use `feat` or `fix`, use the scope rules above
 to identify the affected subprojects, Minecraft version, or loader. For other

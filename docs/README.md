@@ -155,19 +155,88 @@ Apply the matching config convention plugin in addition to the normal loader con
 
 These conventions wire the `config` and `configClient` outputs into the jar and into the appropriate compile/runtime classpaths. Fabric config projects also add Forge Config API Port to `implementation`/`modImplementation`, `ciRuntimeMods`, and generated `fabric.mod.json` dependencies.
 
+The builder supports primitive values, ranged numbers, strings, lists, enums, and nested sections. Prefer `category(...)` plus nested classes for hierarchical config; keep `push(...)` and `pop()` for low-level adapter work or unusual migration cases.
+
 ```java
+package net.meatwo310.examplemod.config;
+
+import net.meatwo310.examplemod.mdk.config.ConfigEntries;
+import net.meatwo310.examplemod.mdk.config.ConfigEntry;
+import net.meatwo310.examplemod.mdk.config.ConfigEntryBuilder;
+
+import java.util.List;
+
 public final class ServerConfig {
     private static final ConfigEntryBuilder BUILDER = new ConfigEntryBuilder();
 
     public static final ConfigEntry.BooleanEntry ENABLE_FEATURE =
-            BUILDER.comment("Enable a server feature")
+            BUILDER.comment("Enable the main server feature.")
                     .define("enableFeature", true);
 
-    public static final ConfigEntries ENTRIES = BUILDER.build();
+    public static final ConfigEntry.IntEntry MAX_STORED_ITEMS =
+            BUILDER.comment("Maximum number of stored items.")
+                    .defineInRange("maxStoredItems", 64, 1, 4096);
 
-    private ServerConfig() {}
+    public static final ConfigEntry.ListEntry<String> ALLOWED_ITEMS =
+            BUILDER.comment("Item ids accepted by the feature.")
+                    .defineList(
+                            "allowedItems",
+                            List.of("minecraft:stone"),
+                            () -> "minecraft:stone",
+                            value -> value instanceof String);
+
+    public static final ConfigEntries ADVANCED =
+            BUILDER.comment("Advanced server settings.")
+                    .category("advanced", Advanced.ENTRIES);
+
+    public static final class Advanced {
+        private static final ConfigEntryBuilder BUILDER = new ConfigEntryBuilder();
+
+        public static final ConfigEntry.BooleanEntry ENABLE_DEBUG_LOG =
+                BUILDER.comment("Enable additional debug logging.")
+                        .define("enableDebugLog", false);
+
+        public static final ConfigEntry.DoubleEntry SPAWN_RATE_MULTIPLIER =
+                BUILDER.comment("Multiplier applied to spawn rate.")
+                        .defineInRange("spawnRateMultiplier", 1.0D, 0.0D, 10.0D);
+
+        public static final ConfigEntries PERFORMANCE =
+                BUILDER.comment("Performance tuning.")
+                        .category("performance", Performance.ENTRIES);
+
+        public static final class Performance {
+            private static final ConfigEntryBuilder BUILDER = new ConfigEntryBuilder();
+
+            public static final ConfigEntry.IntEntry CACHE_SIZE =
+                    BUILDER.comment("Maximum cache size.")
+                            .defineInRange("cacheSize", 256, 0, 8192);
+
+            public static final ConfigEntries ENTRIES = BUILDER.build();
+        }
+
+        public static final ConfigEntries ENTRIES = BUILDER.build();
+    }
+
+    public static final ConfigEntries ENTRIES = BUILDER.build();
 }
 ```
+
+This produces a structure like:
+
+```toml
+enableFeature = true
+maxStoredItems = 64
+allowedItems = ["minecraft:stone"]
+
+[advanced]
+enableDebugLog = false
+spawnRateMultiplier = 1.0
+
+[advanced.performance]
+cacheSize = 256
+```
+
+Expose config files through `ConfigDeclaration` in `ModConfigs`:
 
 ```java
 public final class ModConfigs {
@@ -177,12 +246,18 @@ public final class ModConfigs {
             ConfigDeclaration.of(ConfigSide.CLIENT, ClientConfig.ENTRIES, "examplemod-client-special.toml");
 
     public static final List<ConfigDeclaration> ALL = List.of(SERVER, CLIENT);
-
-    private ModConfigs() {}
 }
 ```
 
-`ConfigSide.SERVER`, `ConfigSide.CLIENT`, and `ConfigSide.COMMON` are mapped to the loader-specific config type by each platform. The optional file name is passed through to the loader API; omit it to use the loader default.
+Read values directly from the exported entries:
+
+```java
+if (ServerConfig.ENABLE_FEATURE.getAsBoolean()) {
+    int cacheSize = ServerConfig.Advanced.Performance.CACHE_SIZE.getAsInt();
+}
+```
+
+`ConfigSide.SERVER`, `ConfigSide.CLIENT`, and `ConfigSide.COMMON` are mapped to the loader-specific config type by each platform. Use `SERVER` for world/server-owned gameplay rules and balance values, `CLIENT` for local preferences such as rendering or UI options, and `COMMON` for installation-wide defaults that both physical sides load independently. The optional file name is passed through to the loader API; omit it to use the loader default.
 
 The common config declarations are loader-neutral. Each platform provides the dependency and registrar needed for its target, plus optional client-side helpers when it exposes a config screen:
 
@@ -193,17 +268,6 @@ The common config declarations are loader-neutral. Each platform provides the de
 | Fabric platforms       | Forge Config API Port, declared per Minecraft version | Forge Config API Port registry                   | [ModMenu](https://modrinth.com/mod/modmenu/) for the mod list entry; [Forge Config Screens](https://modrinth.com/mod/forge-config-screens) on <=mc1.20.1 |
 
 Because of this, the same `ConfigDeclaration` list can be shared from `common`, extended by a version-specific common project, and then bound by each platform to the dependency it actually runs with.
-
-The builder supports primitive values, ranged numbers, strings, lists, enums, and nested sections:
-
-```java
-BUILDER.comment("Max stored items")
-        .defineInRange("maxStoredItems", 64, 1, 4096);
-BUILDER.comment("Allowed item ids")
-        .defineList("allowedItems", List.of("minecraft:stone"), () -> "minecraft:stone", value -> value instanceof String);
-BUILDER.comment("Advanced settings")
-        .category("advanced", AdvancedConfig.ENTRIES);
-```
 
 The template registers `ModConfigs.ALL` directly. Use this when every included target can share the same config files:
 
@@ -223,8 +287,6 @@ When a version-specific common project such as `26.1.2-common` needs extra entri
 public final class VersionedModConfigs {
     public static final List<ConfigDeclaration> ALL =
             ConfigDeclarations.append(ModConfigs.ALL, ModConfigs.SERVER, VersionedServerConfig.ENTRIES);
-
-    private VersionedModConfigs() {}
 }
 ```
 

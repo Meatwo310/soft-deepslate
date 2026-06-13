@@ -13,6 +13,7 @@ commands change.
 2. `project-map.md` - locate the owning project, source set, or template.
 3. `workflow.md` - follow the normal edit and verification flow.
 4. `change-recipes.md` - use the checklist that matches the requested change.
+5. `config-api.md` - use when adding or changing shared config declarations.
 
 ## Repository Shape
 
@@ -53,6 +54,8 @@ Projects included by default in this template:
   and which loader projects are included in the CI build matrix.
 - `docs/README.md` contains the dependency configuration table. Keep LLM-facing
   dependency notes aligned with that section when dependency rules change.
+- `docs/README.md` contains the user-facing config overview. Keep
+  `config-api.md` aligned with that section when config APIs change.
 
 ## Generated Metadata
 

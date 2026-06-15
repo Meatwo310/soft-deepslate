@@ -45,6 +45,8 @@ classes solely for style. They add noise and do not clarify the config API.
 `ConfigEntryBuilder` is the normal entry-definition API:
 
 - `comment(String comment)` stores a comment for the next entry or category.
+  Blank comments are treated as absent during binding and must not be forwarded
+  to loader-specific config builders.
 - `define(...)` defines unrestricted primitive, boolean, or string values. Supported overloads are `int`, `long`, `double`, `boolean`, and `String`.
 - `defineInRange(...)` defines ranged numeric values. Supported overloads are `int`, `long`, and `double`.
 - `defineList(...)` defines a list from a default value, a new-element supplier for config screens, and an element validator.

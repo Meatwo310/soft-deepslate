@@ -1,4 +1,5 @@
 import net.meatwo310.mdk.build.*
+import org.gradle.api.file.DuplicatesStrategy
 
 plugins {
     `java-library`
@@ -103,8 +104,8 @@ legacyForge {
     mods {
         create(modId) {
             sourceSet(sourceSets.main.get())
-            sourceSet(project(sharedCommonProject).sourceSets.main.get())
             sourceSet(project(commonProject).sourceSets.main.get())
+            sourceSet(project(sharedCommonProject).sourceSets.main.get())
         }
     }
 }
@@ -160,7 +161,8 @@ sourceSets.main.get().resources.srcDir(generateModMetadata)
 legacyForge.ideSyncTask(generateModMetadata)
 
 tasks.jar {
-    from(project(sharedCommonProject).sourceSets.main.get().output)
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from(project(commonProject).sourceSets.main.get().output)
+    from(project(sharedCommonProject).sourceSets.main.get().output)
     manifest.attributes(mapOf("MixinConfigs" to "$modId.mixins.json"))
 }

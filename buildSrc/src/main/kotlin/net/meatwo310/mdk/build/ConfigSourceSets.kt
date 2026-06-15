@@ -1,6 +1,7 @@
 package net.meatwo310.mdk.build
 
 import org.gradle.api.Project
+import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.jvm.tasks.Jar
@@ -14,10 +15,10 @@ data class SharedConfigSourceSets(
     val common: SourceSet,
     val version: SourceSet?,
 ) {
-    val all: List<SourceSet> = listOfNotNull(common, version)
+    val all: List<SourceSet> = listOfNotNull(version, common)
 
     fun including(vararg sourceSets: SourceSet): Array<SourceSet> =
-        (all + sourceSets).toTypedArray()
+        (sourceSets.toList() + all).toTypedArray()
 }
 
 fun Project.configureConfigSourceSet(name: String = CONFIG_SOURCE_SET_NAME): SourceSet {
@@ -33,6 +34,7 @@ fun Project.configureConfigSourceSet(name: String = CONFIG_SOURCE_SET_NAME): Sou
 
 fun Project.includeConfigOutput(vararg sourceSets: SourceSet) {
     tasks.named<Jar>("jar") {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         for (sourceSet in sourceSets) {
             from(sourceSet.output)
         }

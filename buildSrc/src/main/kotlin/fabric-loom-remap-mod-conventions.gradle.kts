@@ -24,8 +24,8 @@ loom {
         create(modId) {
             sourceSet(sourceSets.main.get())
             sourceSet(sourceSets.named("client").get())
-            sourceSet(project(sharedCommonProject).sourceSets.main.get())
             sourceSet(project(commonProject).sourceSets.main.get())
+            sourceSet(project(sharedCommonProject).sourceSets.main.get())
         }
     }
 

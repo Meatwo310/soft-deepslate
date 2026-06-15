@@ -1,5 +1,6 @@
 import groovy.json.JsonOutput
 import net.meatwo310.mdk.build.*
+import org.gradle.api.file.DuplicatesStrategy
 
 plugins {
     `java-library`
@@ -97,6 +98,7 @@ tasks.named("sourcesJar") {
 }
 
 tasks.jar {
-    from(project(sharedCommonProject).sourceSets.main.get().output)
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from(project(commonProject).sourceSets.main.get().output)
+    from(project(sharedCommonProject).sourceSets.main.get().output)
 }

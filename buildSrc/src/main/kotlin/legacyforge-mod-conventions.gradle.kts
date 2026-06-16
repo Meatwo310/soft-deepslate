@@ -86,7 +86,7 @@ legacyForge {
 
         create("data") {
             data()
-            gameDirectory = project.file("run-data")
+            gameDirectory = file("run-data")
             programArguments.addAll(
                 "--mod", modId,
                 "--all",

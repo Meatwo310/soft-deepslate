@@ -88,7 +88,7 @@ neoForge {
 
         create("data") {
             if (neoDataRun == "clientData") clientData() else data()
-            gameDirectory = project.file("run-data")
+            gameDirectory = file("run-data")
             programArguments.addAll(
                 "--mod", modId,
                 "--all",

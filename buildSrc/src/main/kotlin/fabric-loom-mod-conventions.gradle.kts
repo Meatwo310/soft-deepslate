@@ -25,10 +25,10 @@ loom {
     }
 
     runs.configureEach {
-        ideConfigGenerated(true)
+        generateRunConfig.set(true)
         preferGradleTask.set(true)
         if (name == "gameTest") {
-            vmArg("-Dfabric.log.level=debug")
+            jvmArguments.add("-Dfabric.log.level=debug")
         }
     }
 }

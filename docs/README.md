@@ -15,6 +15,7 @@ A Minecraft mod template for multi-version and multi-loader development, powered
 | 1.21.11   |   ✅    |      ⏳       |    ❌     |  🚫   |
 | 26.1      |   ✅    |      ❌       |    ✅     |  🚫   |
 | 26.1.2    |   🌟   |      ❌       |    🌟    |  🚫   |
+| 26.2      |   ✅   |      🚫       |    ✅    |  🚫   |
 
 🌟Primary support | ✅ Supported | 🚧 Partial support | ⏳ Planned | ❌ Not supported yet | 🚫 Unsupported
 

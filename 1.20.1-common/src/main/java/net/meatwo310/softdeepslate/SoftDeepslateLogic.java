@@ -1,6 +1,5 @@
 package net.meatwo310.softdeepslate;
 
-import net.meatwo310.softdeepslate.config.ModServerConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -9,14 +8,22 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 public final class SoftDeepslateLogic {
-    private final ModServerConfig config;
+    private final DoubleSupplier miningSpeed;
+    private final Supplier<? extends Iterable<String>> blocks;
     private final BlockResolver blockResolver;
     private volatile Set<Block> blocksCache;
 
-    public SoftDeepslateLogic(ModServerConfig config, BlockResolver blockResolver) {
-        this.config = Objects.requireNonNull(config);
+    public SoftDeepslateLogic(
+            DoubleSupplier miningSpeed,
+            Supplier<? extends Iterable<String>> blocks,
+            BlockResolver blockResolver
+    ) {
+        this.miningSpeed = Objects.requireNonNull(miningSpeed);
+        this.blocks = Objects.requireNonNull(blocks);
         this.blockResolver = Objects.requireNonNull(blockResolver);
     }
 
@@ -25,7 +32,7 @@ public final class SoftDeepslateLogic {
     }
 
     public double miningSpeed() {
-        return config.miningSpeed();
+        return miningSpeed.getAsDouble();
     }
 
     public void invalidateBlockCache() {
@@ -47,23 +54,23 @@ public final class SoftDeepslateLogic {
     }
 
     private Set<Block> buildCache() {
-        HashSet<Block> blocks = new HashSet<>();
+        HashSet<Block> resolvedBlocks = new HashSet<>();
 
-        for (String name : config.blocks()) {
+        for (String name : blocks.get()) {
             if (name.startsWith("#")) {
-                cacheBlockTag(blocks, name.substring(1));
+                cacheBlockTag(resolvedBlocks, name.substring(1));
             } else {
-                cacheBlock(blocks, name);
+                cacheBlock(resolvedBlocks, name);
             }
         }
 
-        if (blocks.isEmpty()) {
+        if (resolvedBlocks.isEmpty()) {
             Constants.LOGGER.warn("No valid blocks found");
         } else {
-            Constants.LOGGER.info("Cached {} blocks", blocks.size());
+            Constants.LOGGER.info("Cached {} blocks", resolvedBlocks.size());
         }
 
-        return Set.copyOf(blocks);
+        return Set.copyOf(resolvedBlocks);
     }
 
     private void cacheBlock(Set<Block> blocks, String blockName) {

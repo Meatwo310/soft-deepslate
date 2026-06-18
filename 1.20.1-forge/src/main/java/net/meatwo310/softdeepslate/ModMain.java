@@ -1,6 +1,8 @@
 package net.meatwo310.softdeepslate;
 
 import net.meatwo310.softdeepslate.config.ServerConfig;
+import net.meatwo310.softdeepslate.mdk.config.PlatformConfigRegistrar;
+import net.meatwo310.softdeepslate.mdk.config.VersionedConfigSpec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
@@ -8,7 +10,6 @@ import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.tags.ITag;
@@ -23,8 +24,10 @@ public class ModMain {
 
     public ModMain(FMLJavaModLoadingContext ctx) {
         Constants.LOGGER.debug(Constants.INITIALIZING, ModUtils.loc("1.20.1-forge"));
-        logic = new SoftDeepslateLogic(ServerConfig.INSTANCE, new ForgeBlockResolver());
-        ctx.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
+        logic = new SoftDeepslateLogic(ServerConfig.MINING_SPEED, ServerConfig.BLOCKS, new ForgeBlockResolver());
+        PlatformConfigRegistrar.registerAll(ctx, VersionedConfigSpec.bindAll(List.of(
+                net.meatwo310.softdeepslate.config.ModConfigs.SERVER
+        )));
     }
 
     @Mod.EventBusSubscriber(modid = Constants.MODID)

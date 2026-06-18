@@ -1,3 +1,6 @@
+import net.meatwo310.mdk.build.*
+import org.gradle.api.file.DuplicatesStrategy
+
 plugins {
     `java-library`
     idea
@@ -25,10 +28,11 @@ val forgeFullVersion = "$minecraftVersion-$forgeVersion"
 val commonProject = ":$minecraftVersion-common"
 val sharedCommonProject = ":common"
 evaluationDependsOn(sharedCommonProject)
+configureCiRuntimeMods()
 
 dependencies {
     implementation(project(commonProject))
-    annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
+    annotationProcessor("${versionCatalog.module(VersionCatalogLibrary.Mixin)}:${versionCatalog.version(VersionCatalogVersion.Mixin)}:processor")
 }
 
 sourceSets.main.get().resources {
@@ -73,14 +77,16 @@ legacyForge {
             systemProperty("forge.enabledGameTestNamespaces", modId)
         }
 
-        create("gameTestServer") {
-            type = "gameTestServer"
-            systemProperty("forge.enabledGameTestNamespaces", modId)
+        if (minecraftVersion.supportsGameTestServer()) {
+            create("gameTestServer") {
+                type = "gameTestServer"
+                systemProperty("forge.enabledGameTestNamespaces", modId)
+            }
         }
 
         create("data") {
             data()
-            gameDirectory = project.file("run-data")
+            gameDirectory = file("run-data")
             programArguments.addAll(
                 "--mod", modId,
                 "--all",
@@ -98,8 +104,8 @@ legacyForge {
     mods {
         create(modId) {
             sourceSet(sourceSets.main.get())
-            sourceSet(project(sharedCommonProject).sourceSets.main.get())
             sourceSet(project(commonProject).sourceSets.main.get())
+            sourceSet(project(sharedCommonProject).sourceSets.main.get())
         }
     }
 }
@@ -155,7 +161,8 @@ sourceSets.main.get().resources.srcDir(generateModMetadata)
 legacyForge.ideSyncTask(generateModMetadata)
 
 tasks.jar {
-    from(project(sharedCommonProject).sourceSets.main.get().output)
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from(project(commonProject).sourceSets.main.get().output)
+    from(project(sharedCommonProject).sourceSets.main.get().output)
     manifest.attributes(mapOf("MixinConfigs" to "$modId.mixins.json"))
 }

@@ -1,3 +1,8 @@
+import net.meatwo310.mdk.build.VersionCatalogLibrary
+import net.meatwo310.mdk.build.library
+import net.meatwo310.mdk.build.module
+import net.meatwo310.mdk.build.versionCatalog
+
 plugins {
     id("fabric-mod-conventions")
     id("net.fabricmc.fabric-loom-remap")
@@ -5,8 +10,6 @@ plugins {
 
 val modId: String by project
 val minecraftVersion: String by project
-val loaderVersion: String by project
-val fabricApiVersion: String by project
 val parchmentMinecraftVersion: String by project
 val parchmentMappingsVersion: String by project
 
@@ -21,23 +24,26 @@ loom {
         create(modId) {
             sourceSet(sourceSets.main.get())
             sourceSet(sourceSets.named("client").get())
-            sourceSet(project(sharedCommonProject).sourceSets.main.get())
             sourceSet(project(commonProject).sourceSets.main.get())
+            sourceSet(project(sharedCommonProject).sourceSets.main.get())
         }
     }
 
     runs.configureEach {
-        ideConfigGenerated(true)
+        generateRunConfig.set(true)
+        preferGradleTask.set(true)
+        if (name == "gameTest") {
+            jvmArguments.add("-Dfabric.log.level=debug")
+        }
     }
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:$minecraftVersion")
+    minecraft("${versionCatalog.module(VersionCatalogLibrary.Minecraft)}:$minecraftVersion")
     @Suppress("UnstableApiUsage")
     mappings(loom.layered {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-$parchmentMinecraftVersion:$parchmentMappingsVersion@zip")
+        parchment("${versionCatalog.module(VersionCatalogLibrary.ParchmentData)}-$parchmentMinecraftVersion:$parchmentMappingsVersion@zip")
     })
-    modImplementation("net.fabricmc:fabric-loader:$loaderVersion")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricApiVersion")
+    modImplementation(versionCatalog.library(VersionCatalogLibrary.FabricLoader))
 }

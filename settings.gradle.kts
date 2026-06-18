@@ -15,6 +15,7 @@ plugins {
 
 /// Common ///
 include("common")
+include("forge-common")
 
 /// 1.18.2 ///
 //include("1.18.2-common")

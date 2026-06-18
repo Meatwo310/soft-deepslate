@@ -43,9 +43,9 @@ include("1.20.1-forge")
 //include("1.21.11-fabric")
 
 /// 26.1 ///
-include("26.1-common")
+//include("26.1-common")
 //include("26.1-fabric")
-include("26.1-neo")
+//include("26.1-neo")
 
 /// 26.1.2 ///
 include("26.1.2-common")
@@ -53,9 +53,9 @@ include("26.1.2-fabric")
 include("26.1.2-neo")
 
 /// 26.2 ///
-include("26.2-common")
-include("26.2-fabric")
-include("26.2-neo")
+//include("26.2-common")
+//include("26.2-fabric")
+//include("26.2-neo")
 
 val ciBuildProjectNames = rootProject.children
     .map { it.name }

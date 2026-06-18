@@ -401,6 +401,15 @@ git merge upstream/main
 
 Resolve conflicts carefully, then commit the merge.
 
+After merging upstream updates, review newly added files as well as conflicted
+files:
+
+- Replace any newly introduced `net.meatwo310.examplemod` package names with
+  your mod's namespace.
+- Newly added subprojects are enabled by default when their `include(...)` lines
+  are merged into `settings.gradle.kts`. Remove or comment out projects you do
+  not need before importing, building, or running CI.
+
 ## Template License
 
 [MIT](https://github.com/Meatwo310/custom-mdk/blob/main/TEMPLATE-LICENSE) - feel free to relicense your project.

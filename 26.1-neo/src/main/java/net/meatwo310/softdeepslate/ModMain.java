@@ -1,5 +1,6 @@
 package net.meatwo310.softdeepslate;
 
+import net.meatwo310.softdeepslate.config.ModConfigs;
 import net.meatwo310.softdeepslate.config.ServerConfig;
 import net.meatwo310.softdeepslate.mdk.config.PlatformConfigRegistrar;
 import net.meatwo310.softdeepslate.mdk.config.VersionedConfigSpec;
@@ -17,7 +18,6 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
-import java.util.List;
 import java.util.Optional;
 
 @Mod(Constants.MODID)
@@ -27,9 +27,7 @@ public class ModMain {
     public ModMain(IEventBus modEventBus, ModContainer modContainer) {
         Constants.LOGGER.debug(Constants.INITIALIZING, ModUtils.id("26.1-neo"));
         logic = new SoftDeepslateLogic(ServerConfig.MINING_SPEED, ServerConfig.BLOCKS, new NeoBlockResolver());
-        PlatformConfigRegistrar.registerAll(modContainer, VersionedConfigSpec.bindAll(List.of(
-                net.meatwo310.softdeepslate.config.ModConfigs.SERVER
-        )));
+        PlatformConfigRegistrar.registerAll(modContainer, VersionedConfigSpec.bindAll(ModConfigs.ALL));
     }
 
     @EventBusSubscriber(modid = Constants.MODID)

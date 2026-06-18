@@ -1,5 +1,6 @@
 package net.meatwo310.softdeepslate;
 
+import net.meatwo310.softdeepslate.config.ModConfigs;
 import net.meatwo310.softdeepslate.config.ServerConfig;
 import net.meatwo310.softdeepslate.mdk.config.PlatformConfigRegistrar;
 import net.meatwo310.softdeepslate.mdk.config.VersionedConfigSpec;
@@ -25,9 +26,7 @@ public class ModMain {
     public ModMain(FMLJavaModLoadingContext ctx) {
         Constants.LOGGER.debug(Constants.INITIALIZING, ModUtils.loc("1.20.1-forge"));
         logic = new SoftDeepslateLogic(ServerConfig.MINING_SPEED, ServerConfig.BLOCKS, new ForgeBlockResolver());
-        PlatformConfigRegistrar.registerAll(ctx, VersionedConfigSpec.bindAll(List.of(
-                net.meatwo310.softdeepslate.config.ModConfigs.SERVER
-        )));
+        PlatformConfigRegistrar.registerAll(ctx, VersionedConfigSpec.bindAll(ModConfigs.ALL));
     }
 
     @Mod.EventBusSubscriber(modid = Constants.MODID)

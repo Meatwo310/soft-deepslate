@@ -1,14 +1,81 @@
 package net.meatwo310.softdeepslate;
 
 import net.meatwo310.softdeepslate.config.ModConfigs;
+import net.meatwo310.softdeepslate.config.ServerConfig;
 import net.meatwo310.softdeepslate.mdk.config.PlatformConfigRegistrar;
 import net.meatwo310.softdeepslate.mdk.config.VersionedConfigSpec;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.block.Block;
+import net.minecraftforge.event.TagsUpdatedEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.tags.ITagManager;
+
+import java.util.List;
+import java.util.Optional;
 
 @Mod(Constants.MODID)
 public class ModMain {
+    private static SoftDeepslateLogic logic;
+
     public ModMain() {
         Constants.LOGGER.debug(Constants.INITIALIZING, ModUtils.loc("1.18.2-forge"));
+        logic = new SoftDeepslateLogic(ServerConfig.MINING_SPEED, ServerConfig.BLOCKS, new ForgeBlockResolver());
         PlatformConfigRegistrar.registerAll(VersionedConfigSpec.bindAll(ModConfigs.ALL));
+    }
+
+    @Mod.EventBusSubscriber(modid = Constants.MODID)
+    public static class Subscriber {
+        @SubscribeEvent
+        public static void onPlayerBreakSpeed(PlayerEvent.BreakSpeed event) {
+            SoftDeepslateLogic logic = logic();
+            if (logic.shouldMineFaster(event.getState())) {
+                event.setNewSpeed((float) (event.getNewSpeed() * logic.miningSpeed()));
+            }
+        }
+
+        @SubscribeEvent
+        public static void onTagsUpdated(TagsUpdatedEvent event) {
+            logic().invalidateBlockCache();
+        }
+    }
+
+    private static SoftDeepslateLogic logic() {
+        if (logic == null) {
+            throw new IllegalStateException("SoftDeepslateLogic has not been initialized");
+        }
+        return logic;
+    }
+
+    private static class ForgeBlockResolver implements SoftDeepslateLogic.BlockResolver {
+        @Override
+        public Optional<Block> resolveBlock(ResourceLocation id) {
+            return Optional.ofNullable(ForgeRegistries.BLOCKS.getValue(id));
+        }
+
+        @Override
+        public Optional<? extends Iterable<Block>> resolveTag(ResourceLocation id) {
+            ITagManager<Block> tagManager = ForgeRegistries.BLOCKS.tags();
+            if (tagManager == null) {
+                Constants.LOGGER.warn("Block tag manager is not available: #{}", id);
+                return Optional.of(List.of());
+            }
+
+            TagKey<Block> tagKey = tagManager.createTagKey(id);
+            if (!tagManager.isKnownTagName(tagKey)) {
+                return Optional.empty();
+            }
+
+            return Optional.of(tagManager.getTag(tagKey));
+        }
+
+        @Override
+        public String blockName(Block block) {
+            ResourceLocation id = ForgeRegistries.BLOCKS.getKey(block);
+            return id != null ? id.toString() : "?";
+        }
     }
 }

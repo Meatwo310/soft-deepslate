@@ -1,0 +1,10 @@
+{
+  "required": true,
+  "package": "net.meatwo310.softdeepslate.mixin",
+  "mixins": [
+    "PlayerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

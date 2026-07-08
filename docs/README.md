@@ -326,10 +326,11 @@ The available bump types are:
 | `major` | Increment the major version. |
 
 For any bump type except `none`, the workflow updates `version.txt`, commits the
-new version as `release: <version>`, and pushes the commit to the selected
-branch before building the release. Release notes include breaking changes,
-`feat`, `fix`, and `perf` commits. Template maintenance commits with the `mdk`
-type and other commit types are omitted.
+new version locally as `release: <version>`, builds the release, then pushes the
+commit and release tag to the selected branch after the jars and release notes
+are ready. Release notes include breaking changes, `feat`, `fix`, and `perf`
+commits. Template maintenance commits with the `mdk` type and other commit
+types are omitted.
 
 ## Receiving Upstream Updates
 

@@ -41,8 +41,8 @@ LLM agents and automation should also read [MDK Agent Notes](mdk/README.md) befo
 Before opening or importing the project in IntelliJ IDEA or Gradle, trim `settings.gradle.kts`: each included project adds Gradle configuration and IDE import load time. Comment out or remove any unused `include(...)` lines first.
 
 1. Click **Use this template** on GitHub to create your repository from this template.
-2. If you want to keep receiving template updates, initialize upstream tracking
-   before regular development. See [Receiving Upstream Updates](#receiving-upstream-updates).
+2. If you want to keep receiving template updates, follow
+   [Receiving Upstream Updates](#receiving-upstream-updates) before regular development.
 3. Edit `settings.gradle.kts` and remove unused subprojects to reduce Gradle configuration time and cache usage.
 4. Edit `gradle.properties` for your mod id, name, group, license, authors, URLs, and Fabric entry points, and edit `version.txt` for your mod version.
 5. Rename ALL Java package names (including those in the shared configuration system) to avoid conflicts with other mods. Update `Constants`, entry points, mixin config names, and language assets from `examplemod` to your mod id.
@@ -335,8 +335,8 @@ type and other commit types are omitted.
 
 Repositories created with GitHub's **Use this template** button do not share Git
 history with this template repository. If you want to keep receiving upstream
-template updates, initialize your repository history from `upstream/main` before
-you start regular development.
+template updates, connect the matching upstream template commit to your
+downstream history before you start regular development.
 
 Add this template repository as an upstream remote:
 
@@ -345,38 +345,77 @@ git remote add upstream https://github.com/Meatwo310/custom-mdk.git
 git fetch upstream
 ```
 
-Then replace the freshly created local `main` branch with `upstream/main` and
-force-push it to your repository:
+Find the upstream commit whose files match the template snapshot used by your
+downstream repository. If you created the repository from the current template,
+this is usually `upstream/main`. If the downstream repository was created from
+an older template snapshot, use that older upstream commit instead.
+
+```sh
+upstream_snapshot=upstream/main
+git diff --quiet main "$upstream_snapshot"
+```
+
+The `git diff --quiet` command should exit successfully. If it reports a
+difference, choose another upstream commit and check again.
+
+Then merge that matching upstream commit into the freshly created local `main`
+branch:
 
 ```sh
 git switch main
-git reset --hard upstream/main
-git push --force-with-lease origin main
+git merge --allow-unrelated-histories --no-ff "$upstream_snapshot" \
+  -m "mdk: connect upstream history"
+git push origin main
 ```
 
-This rewrites the initial repository history. Do this only before other people
-base work on your repository, and save any local changes first.
+This keeps your downstream repository's initial commit as the first parent of
+the merge, while linking the template repository history as the second parent.
+The resulting history starts like this:
+
+```text
+*   <merge> (HEAD -> main) mdk: connect upstream history
+|\
+| * <upstream-snapshot> mdk: matching template change
+| * ...
+| * <upstream-root> chore: first commit
+* <downstream-root> chore: first commit
+```
+
+After connecting the matching snapshot, merge the latest upstream template if
+needed:
+
+```sh
+git fetch upstream
+git merge upstream/main
+```
 
 <details>
 <summary>If downstream development has already started</summary>
 
-If downstream work already exists, replay those commits on top of the template
-history instead:
+If downstream work already exists and you can rewrite downstream history, create
+a new branch from the downstream root commit, connect the matching upstream
+snapshot there, then replay your downstream commits on top.
 
 ```sh
 git switch main
 git branch downstream-before-template-sync
-git switch -c template-sync upstream/main
-template_snapshot=$(git rev-list --max-parents=0 downstream-before-template-sync)
-git cherry-pick --empty=drop "$template_snapshot"..downstream-before-template-sync
+downstream_snapshot=$(git rev-list --max-parents=0 HEAD)
+upstream_snapshot=<matching-upstream-commit>
+git diff --quiet "$downstream_snapshot" "$upstream_snapshot"
+
+git switch -c template-sync "$downstream_snapshot"
+git merge --allow-unrelated-histories --no-ff "$upstream_snapshot" \
+  -m "mdk: connect upstream history"
+git cherry-pick --empty=drop "$downstream_snapshot"..downstream-before-template-sync
 ```
 
-This creates a branch with the template history as its base, then applies your
-existing commits in their original order. The initial template snapshot commit
-is excluded because it usually duplicates files that already exist in
-`upstream/main`. If Git reports conflicts, resolve them, run `git add` for the
-resolved files, then continue with `git cherry-pick --continue`. Empty commits
-are dropped when they duplicate the template contents.
+If Git reports conflicts, resolve them, run `git add` for the resolved files,
+then continue with `git merge --continue` or `git cherry-pick --continue`,
+depending on the command that stopped. Keep downstream mod-specific changes
+where they intentionally replaced template defaults, and take upstream changes
+where the file is still template-owned. If many unchanged template files report
+add/add conflicts during the first merge, the selected `upstream_snapshot`
+probably does not match the downstream template snapshot.
 
 After checking that the result is correct, replace `main` with the replayed
 history:

@@ -31,6 +31,9 @@ Generated release notes include breaking changes (`!`), `feat`, `fix`, and `perf
 commits. Other types are still useful for repository history, but are omitted
 from release notes.
 
+Because these entries can appear in changelogs as written, prefer English for
+commit messages that may be included in release notes.
+
 ## Examples
 
 ```

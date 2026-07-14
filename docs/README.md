@@ -4,20 +4,20 @@ A Minecraft mod template for multi-version and multi-loader development, powered
 
 ## Supported Platforms
 
-| Minecraft | Fabric | LexForge Legacy | LexForge | NeoForge | Quilt |
-|-----------|:------:|:---------------:|:--------:|:--------:|:-----:|
-| <1.18.2   |   🚫   |       🚫        |    -     |    -     |  🚫   |
-| 1.18.2    |   ⏳    |       ✅        |    -     |    -     |  🚫   |
-| 1.19.2    |   ⏳    |       ✅        |    -     |    -     |  🚫   |
-| 1.20.1    |   ✅    |       ✅        |    -     |    🚫    |  🚫   |
-| 1.21.1    |   ✅    |       -         |    ✅    |    ✅    |  🚫   |
-| 1.21.8    |   ✅    |       -         |    ✅    |    ❌    |  🚫   |
-| 1.21.11   |   ✅    |       -         |    ✅    |    ❌    |  🚫   |
-| 26.1      |   ✅    |       -         |    ❌    |    ✅    |  🚫   |
-| 26.1.2    |   🌟    |       -         |    ❌    |    🌟    |  🚫   |
-| 26.2      |   ✅    |       -         |    🚫    |    ✅    |  🚫   |
+| Minecraft | Fabric | LexForge | NeoForge | Quilt |
+|-----------|:------:|:--------:|:--------:|:-----:|
+| <1.18.2   |   🚫   |    🚫    |    -     |  🚫   |
+| 1.18.2    |   ⏳   |    ✅    |    -     |  🚫   |
+| 1.19.2    |   ⏳   |    ✅    |    -     |  🚫   |
+| 1.20.1    |   ✅   |    ✅    |    🚫    |  🚫   |
+| 1.21.1    |   ✅   |    ✅    |    ✅    |  🚫   |
+| 1.21.8    |   ✅   |    ✅    |    ❌    |  🚫   |
+| 1.21.11   |   ✅   |    ✅    |    ❌    |  🚫   |
+| 26.1      |   ✅   |    ❌    |    ✅    |  🚫   |
+| 26.1.2    |   🌟   |    ❌    |    🌟    |  🚫   |
+| 26.2      |   ✅   |    🚫    |    ✅    |  🚫   |
 
-🌟Primary support | ✅ Supported | 🚧 Partial support | ⏳ Planned | ❌ Not supported yet | 🚫 Unsupported
+🌟 Primary support | ✅ Supported | 🚧 Partial support | ⏳ Planned | ❌ Not supported yet | 🚫 Unsupported
 
 Only the subprojects included in `settings.gradle.kts` are configured. Remove unused `include(...)` lines when you do not need a version or loader.
 

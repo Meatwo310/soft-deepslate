@@ -43,6 +43,16 @@ public final class VersionedConfigSpec {
         }
 
         @Override
+        public void translation(String translationKey) {
+            builder.translation(translationKey);
+        }
+
+        @Override
+        public void worldRestart() {
+            builder.worldRestart();
+        }
+
+        @Override
         public void push(String key) {
             builder.push(key);
         }
@@ -50,6 +60,11 @@ public final class VersionedConfigSpec {
         @Override
         public void pop() {
             builder.pop();
+        }
+
+        @Override
+        public void pop(int count) {
+            builder.pop(count);
         }
 
         @Override

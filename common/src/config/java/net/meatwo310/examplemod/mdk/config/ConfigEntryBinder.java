@@ -59,6 +59,21 @@ public final class ConfigEntryBinder implements ConfigVisitor {
     }
 
     @Override
+    public void translation(String translationKey) {
+        adapter.translation(translationKey);
+    }
+
+    @Override
+    public void worldRestart() {
+        adapter.worldRestart();
+    }
+
+    @Override
+    public void gameRestart() {
+        adapter.gameRestart();
+    }
+
+    @Override
     public void push(String key, String comment) {
         comment(comment);
         adapter.push(key);
@@ -67,6 +82,11 @@ public final class ConfigEntryBinder implements ConfigVisitor {
     @Override
     public void pop() {
         adapter.pop();
+    }
+
+    @Override
+    public void pop(int count) {
+        adapter.pop(count);
     }
 
     private void comment(String comment) {
@@ -78,9 +98,17 @@ public final class ConfigEntryBinder implements ConfigVisitor {
     public interface Adapter {
         void comment(String comment);
 
+        void translation(String translationKey);
+
+        void worldRestart();
+
+        default void gameRestart() {}
+
         void push(String key);
 
         void pop();
+
+        void pop(int count);
 
         ConfigEntryBinding<Integer> defineIntInRange(String key, int defaultValue, int min, int max);
 

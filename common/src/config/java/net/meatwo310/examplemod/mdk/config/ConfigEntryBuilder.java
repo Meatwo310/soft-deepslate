@@ -9,8 +9,46 @@ public class ConfigEntryBuilder {
     private final List<ConfigElement> elements = new ArrayList<>();
     private String pendingComment = "";
 
+    /**
+     * Appends a comment for the next entry or category. Consecutive comments are joined with newlines.
+     *
+     * @param comment the comment to append
+     * @return this builder
+     */
     public ConfigEntryBuilder comment(String comment) {
-        this.pendingComment = comment;
+        this.pendingComment = pendingComment.isEmpty() ? comment : pendingComment + "\n" + comment;
+        return this;
+    }
+
+    /**
+     * Sets the exact translation key for the next entry or category.
+     *
+     * @param translationKey the translation key to use without deriving it from the category path
+     * @return this builder
+     */
+    public ConfigEntryBuilder translation(String translationKey) {
+        elements.add(new ConfigInstruction.Translation(translationKey));
+        return this;
+    }
+
+    /**
+     * Marks the next entry as requiring a world restart.
+     *
+     * @return this builder
+     */
+    public ConfigEntryBuilder worldRestart() {
+        elements.add(new ConfigInstruction.WorldRestart());
+        return this;
+    }
+
+    /**
+     * Marks the next entry as requiring a game restart. This setting is ignored on platforms that use the Forge Config
+     * API.
+     *
+     * @return this builder
+     */
+    public ConfigEntryBuilder gameRestart() {
+        elements.add(new ConfigInstruction.GameRestart());
         return this;
     }
 
@@ -72,6 +110,17 @@ public class ConfigEntryBuilder {
 
     public ConfigEntryBuilder pop() {
         elements.add(new ConfigInstruction.Pop());
+        return this;
+    }
+
+    /**
+     * Closes the requested number of sections.
+     *
+     * @param count the number of sections to close
+     * @return this builder
+     */
+    public ConfigEntryBuilder pop(int count) {
+        elements.add(new ConfigInstruction.PopCount(count));
         return this;
     }
 

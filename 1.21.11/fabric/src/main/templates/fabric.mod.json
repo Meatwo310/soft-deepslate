@@ -1,4 +1,7 @@
 {
+  "mixins": [
+    "softdeepslate.mixins.json"
+  ],
   "depends": {
   }
 }

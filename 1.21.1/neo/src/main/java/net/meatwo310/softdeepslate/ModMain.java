@@ -19,26 +19,11 @@ public class ModMain {
 
     public ModMain(IEventBus modEventBus, ModContainer modContainer) {
         Constants.LOGGER.debug(Constants.INITIALIZING, ModUtils.loc("1.21.1-neo"));
-        modEventBus.addListener(ModMain::onConfigLoading);
-        modEventBus.addListener(ModMain::onConfigReloading);
-        NeoForge.EVENT_BUS.addListener(ModMain::onPlayerBreakSpeed);
-        NeoForge.EVENT_BUS.addListener(ModMain::onTagsUpdated);
+        modEventBus.addListener((ModConfigEvent.Loading event) -> LOGIC.invalidateBlockCache());
+        modEventBus.addListener((ModConfigEvent.Reloading event) -> LOGIC.invalidateBlockCache());
+        NeoForge.EVENT_BUS.addListener((PlayerEvent.BreakSpeed event) ->
+                event.setNewSpeed(LOGIC.adjustDestroySpeed(event.getState(), event.getNewSpeed())));
+        NeoForge.EVENT_BUS.addListener((TagsUpdatedEvent event) -> LOGIC.invalidateBlockCache());
         PlatformConfigRegistrar.registerAll(modContainer, VersionedConfigSpec.bindAll(ModConfigs.ALL));
-    }
-
-    private static void onConfigLoading(ModConfigEvent.Loading event) {
-        LOGIC.invalidateBlockCache();
-    }
-
-    private static void onConfigReloading(ModConfigEvent.Reloading event) {
-        LOGIC.invalidateBlockCache();
-    }
-
-    private static void onPlayerBreakSpeed(PlayerEvent.BreakSpeed event) {
-        event.setNewSpeed(LOGIC.adjustDestroySpeed(event.getState(), event.getNewSpeed()));
-    }
-
-    private static void onTagsUpdated(TagsUpdatedEvent event) {
-        LOGIC.invalidateBlockCache();
     }
 }

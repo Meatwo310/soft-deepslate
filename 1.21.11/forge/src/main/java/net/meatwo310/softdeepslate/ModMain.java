@@ -17,26 +17,13 @@ public class ModMain {
 
     public ModMain(FMLJavaModLoadingContext ctx) {
         Constants.LOGGER.debug(Constants.INITIALIZING, ModUtils.loc("1.21.11-forge"));
-        ModConfigEvent.Loading.getBus(ctx.getModBusGroup()).addListener(ModMain::onConfigLoading);
-        ModConfigEvent.Reloading.getBus(ctx.getModBusGroup()).addListener(ModMain::onConfigReloading);
-        PlayerEvent.BreakSpeed.BUS.addListener(ModMain::onPlayerBreakSpeed);
-        TagsUpdatedEvent.BUS.addListener(ModMain::onTagsUpdated);
+        ModConfigEvent.Loading.getBus(ctx.getModBusGroup())
+                .addListener((ModConfigEvent.Loading event) -> LOGIC.invalidateBlockCache());
+        ModConfigEvent.Reloading.getBus(ctx.getModBusGroup())
+                .addListener((ModConfigEvent.Reloading event) -> LOGIC.invalidateBlockCache());
+        PlayerEvent.BreakSpeed.BUS.addListener((PlayerEvent.BreakSpeed event) ->
+                event.setNewSpeed(LOGIC.adjustDestroySpeed(event.getState(), event.getNewSpeed())));
+        TagsUpdatedEvent.BUS.addListener((TagsUpdatedEvent event) -> LOGIC.invalidateBlockCache());
         PlatformConfigRegistrar.registerAll(ctx.getContainer(), VersionedConfigSpec.bindAll(ModConfigs.ALL));
-    }
-
-    private static void onConfigLoading(ModConfigEvent.Loading event) {
-        LOGIC.invalidateBlockCache();
-    }
-
-    private static void onConfigReloading(ModConfigEvent.Reloading event) {
-        LOGIC.invalidateBlockCache();
-    }
-
-    private static void onPlayerBreakSpeed(PlayerEvent.BreakSpeed event) {
-        event.setNewSpeed(LOGIC.adjustDestroySpeed(event.getState(), event.getNewSpeed()));
-    }
-
-    private static void onTagsUpdated(TagsUpdatedEvent event) {
-        LOGIC.invalidateBlockCache();
     }
 }

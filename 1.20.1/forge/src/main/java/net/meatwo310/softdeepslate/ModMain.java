@@ -18,26 +18,11 @@ public class ModMain {
 
     public ModMain(FMLJavaModLoadingContext ctx) {
         Constants.LOGGER.debug(Constants.INITIALIZING, ModUtils.loc("1.20.1-forge"));
-        ctx.getModEventBus().addListener(ModMain::onConfigLoading);
-        ctx.getModEventBus().addListener(ModMain::onConfigReloading);
-        MinecraftForge.EVENT_BUS.addListener(ModMain::onPlayerBreakSpeed);
-        MinecraftForge.EVENT_BUS.addListener(ModMain::onTagsUpdated);
+        ctx.getModEventBus().addListener((ModConfigEvent.Loading event) -> LOGIC.invalidateBlockCache());
+        ctx.getModEventBus().addListener((ModConfigEvent.Reloading event) -> LOGIC.invalidateBlockCache());
+        MinecraftForge.EVENT_BUS.addListener((PlayerEvent.BreakSpeed event) ->
+                event.setNewSpeed(LOGIC.adjustDestroySpeed(event.getState(), event.getNewSpeed())));
+        MinecraftForge.EVENT_BUS.addListener((TagsUpdatedEvent event) -> LOGIC.invalidateBlockCache());
         PlatformConfigRegistrar.registerAll(ctx, VersionedConfigSpec.bindAll(ModConfigs.ALL));
-    }
-
-    private static void onConfigLoading(ModConfigEvent.Loading event) {
-        LOGIC.invalidateBlockCache();
-    }
-
-    private static void onConfigReloading(ModConfigEvent.Reloading event) {
-        LOGIC.invalidateBlockCache();
-    }
-
-    private static void onPlayerBreakSpeed(PlayerEvent.BreakSpeed event) {
-        event.setNewSpeed(LOGIC.adjustDestroySpeed(event.getState(), event.getNewSpeed()));
-    }
-
-    private static void onTagsUpdated(TagsUpdatedEvent event) {
-        LOGIC.invalidateBlockCache();
     }
 }

@@ -6,12 +6,24 @@ import net.minecraftforge.common.config.Configuration;
 
 public class Config {
 
-    public static String greeting = "Hello World";
+    private static final float DEFAULT_MINING_SPEED_MULTIPLIER = 2.0F;
+
+    public static float miningSpeedMultiplier = DEFAULT_MINING_SPEED_MULTIPLIER;
+
+    private Config() {}
 
     public static void synchronizeConfiguration(File configFile) {
         Configuration configuration = new Configuration(configFile);
+        configuration.load();
 
-        greeting = configuration.getString("greeting", Configuration.CATEGORY_GENERAL, greeting, "How shall I greet?");
+        miningSpeedMultiplier = configuration.getFloat(
+            "miningSpeedMultiplier",
+            Configuration.CATEGORY_GENERAL,
+            DEFAULT_MINING_SPEED_MULTIPLIER,
+            0.0F,
+            Float.MAX_VALUE,
+            "Multiplies the mining speed of Et Futurum Requiem deepslate blocks and deepslate ores. "
+                + "A value of 2.0 doubles their mining speed.");
 
         if (configuration.hasChanged()) {
             configuration.save();

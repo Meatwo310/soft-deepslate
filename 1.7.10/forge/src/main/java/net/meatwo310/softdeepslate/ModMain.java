@@ -10,7 +10,12 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid = ModMain.MODID, version = Tags.VERSION, name = "Soft Deepslate", acceptedMinecraftVersions = "[1.7.10]")
+@Mod(
+    modid = ModMain.MODID,
+    version = Tags.VERSION,
+    name = "Soft Deepslate",
+    acceptedMinecraftVersions = "[1.7.10]",
+    dependencies = "after:etfuturum;after:gregtech")
 public class ModMain {
 
     public static final String MODID = "softdeepslate";

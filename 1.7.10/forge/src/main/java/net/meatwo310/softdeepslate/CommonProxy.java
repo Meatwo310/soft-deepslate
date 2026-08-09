@@ -1,4 +1,4 @@
-package net.meatwo310.examplemod;
+package net.meatwo310.softdeepslate;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;

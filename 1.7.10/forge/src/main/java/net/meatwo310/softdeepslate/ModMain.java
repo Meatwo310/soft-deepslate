@@ -1,4 +1,4 @@
-package net.meatwo310.examplemod;
+package net.meatwo310.softdeepslate;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,13 +10,13 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid = ModMain.MODID, version = Tags.VERSION, name = "Example Mod", acceptedMinecraftVersions = "[1.7.10]")
+@Mod(modid = ModMain.MODID, version = Tags.VERSION, name = "Soft Deepslate", acceptedMinecraftVersions = "[1.7.10]")
 public class ModMain {
 
-    public static final String MODID = "examplemod";
+    public static final String MODID = "softdeepslate";
     public static final Logger LOG = LogManager.getLogger(MODID);
 
-    @SidedProxy(clientSide = "net.meatwo310.examplemod.ClientProxy", serverSide = "net.meatwo310.examplemod.CommonProxy")
+    @SidedProxy(clientSide = "net.meatwo310.softdeepslate.ClientProxy", serverSide = "net.meatwo310.softdeepslate.CommonProxy")
     public static CommonProxy proxy;
 
     @Mod.EventHandler

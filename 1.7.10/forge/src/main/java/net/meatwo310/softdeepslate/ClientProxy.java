@@ -1,4 +1,4 @@
-package net.meatwo310.examplemod;
+package net.meatwo310.softdeepslate;
 
 public class ClientProxy extends CommonProxy {
 

@@ -25,7 +25,7 @@ val modVersion = providers.fileContents(layout.projectDirectory.file("version.tx
     .get()
 val modId = providers.gradleProperty("modId").get()
 val modName = providers.gradleProperty("modName").get()
-val publishTargets = (gradle.extensions.extraProperties["ciBuildProjectNames"] as List<*>)
+val allPublishTargets = (gradle.extensions.extraProperties["ciBuildProjectNames"] as List<*>)
     .map { it.toString() }
     .map { projectName ->
         val targetProject = project(":$projectName")
@@ -38,6 +38,22 @@ val publishTargets = (gradle.extensions.extraProperties["ciBuildProjectNames"] a
             javaVersion = targetProject.findProperty("javaVersion")?.toString() ?: "17",
         )
     }
+val requestedPublishProjects = providers.gradleProperty("publishProjects")
+    .orNull
+    ?.split(",")
+    ?.map { it.trim() }
+    ?.filter { it.isNotEmpty() }
+    ?.toSet()
+    .orEmpty()
+val unknownPublishProjects = requestedPublishProjects - allPublishTargets.map { it.projectName }.toSet()
+if (unknownPublishProjects.isNotEmpty()) {
+    throw GradleException("Unknown publishProjects: ${unknownPublishProjects.sorted().joinToString()}")
+}
+val publishTargets = if (requestedPublishProjects.isEmpty()) {
+    allPublishTargets
+} else {
+    allPublishTargets.filter { it.projectName in requestedPublishProjects }
+}
 
 val publishTag = providers.gradleProperty("publishTag").orElse("v$modVersion")
 val publishDestination = providers.gradleProperty("publishDestination")
@@ -105,7 +121,7 @@ publishMods {
                     name.set("Sources")
                 }
                 if (target.loader == "fabric") {
-                    requires("fabric-api", "forge-config-api-port-fabric")
+                    requires("fabric-api", "forge-config-api-port")
                 }
             }
         }

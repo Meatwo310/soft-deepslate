@@ -20,4 +20,6 @@ nix develop -c ./gradlew publishMods -PpublishTag=v3.0.0 -PpublishDryRun=true
 
 The plugin writes the files and metadata prepared for each destination under
 `build/publishMods/`. Limit the dry run to one service with
-`-PpublishDestination=curseforge` or `-PpublishDestination=modrinth`.
+`-PpublishDestination=curseforge` or `-PpublishDestination=modrinth`. Limit it
+to selected Gradle projects with a comma-separated list such as
+`-PpublishProjects=1.20.1-fabric,1.20.1-forge`.

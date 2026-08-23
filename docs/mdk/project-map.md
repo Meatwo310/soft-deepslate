@@ -14,6 +14,8 @@ This file maps repository locations to responsibilities.
 
 - Applies loader Gradle plugins at the root with `apply false`.
 - Registers `writeCiBuildMatrix`.
+- Reads each loader project's `platformArtifacts` metadata and records exact
+  main, sources, and release artifact names in the CI matrix.
 - Honors a loader project's `ciRequiresCommon=false` property when a standalone
   project does not have a matching `<minecraft>-common` project.
 - Reads `version.txt` into `modVersion`.
@@ -155,6 +157,23 @@ This file maps repository locations to responsibilities.
 - Kotlin helpers for source sets, CI runtime mod staging, Fabric metadata,
   dependency version actions, version support, and version catalog access.
 
+`PlatformArtifacts.kt`
+
+- Defines loader identity, Java version, publishing dependencies, and
+  the Gradle tasks that produce each platform's main and optional sources jars.
+- Provides the `platformArtifacts { publishingDependencies { ... } }` DSL for
+  CurseForge and Modrinth project-page relations.
+- Reads the archive base name from the platform's Gradle `base` configuration.
+- Resolves exact archive file names for CI, release collection, and downstream
+  publishing logic.
+
+`mod-publish-conventions.gradle.kts`
+
+- Configures CurseForge and Modrinth publications from `platformArtifacts`.
+- Exposes Mod Publish Plugin's native CurseForge and Modrinth options through the `modPublishing` block.
+- Downloads the selected GitHub Release instead of rebuilding its jars.
+- Supports destination, platform subset, release type, and dry-run inputs.
+
 `DependencyVersionConstraints.kt`
 
 - Provides `req(version)` for `version { require(version) }` and `pin(version)`
@@ -176,4 +195,11 @@ This file maps repository locations to responsibilities.
 
 - Manually bumps or keeps `version.txt`.
 - Builds all platform projects from the CI matrix.
-- Collects jars, generates release notes, tags, and publishes a GitHub Release.
+- Collects the exact release artifacts declared by each platform, generates
+  release notes, tags, and publishes a GitHub Release.
+
+`.github/workflows/publish.yml`
+
+- Publishes an existing GitHub Release to CurseForge and/or Modrinth.
+- Defaults to dry-run mode and can restrict publishing to selected platform
+  projects.

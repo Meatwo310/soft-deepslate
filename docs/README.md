@@ -1,5 +1,7 @@
 # custom-mdk template guide
 
+[English](README.md) | [日本語](README.ja.md)
+
 A Minecraft mod template for multi-version and multi-loader development, powered by a single Gradle multi-project build. It includes Kotlin DSL build logic, shared source sets, Mixin support, Parchment mappings where available, generated mod metadata, versioned artifact names, Java toolchain management, runtime mod staging, and GitHub Actions for build workflows.
 
 ## Supported Platforms
@@ -122,6 +124,13 @@ Build a specific platform:
 
 Artifacts are written under each configured project directory, such as `26.1.2/fabric/build/libs/`. Additional runtime-only mod jars declared through `ciRuntimeMods` are collected under that project directory's `build/ciRuntimeMods/` for CI.
 
+Each loader convention declares its platform identity and the Gradle tasks that
+produce its release artifacts through `platformArtifacts`. The generated CI
+matrix records the actual archive file names from those tasks. A configured
+sources task makes its sources jar a required release artifact; omit the
+sources task declaration for a platform that deliberately does not generate
+one.
+
 ## Running
 
 Run a client:
@@ -160,14 +169,17 @@ dependencies {
 }
 ```
 
-Choose the dependency configuration by what needs the dependency:
+Choose compile and local runtime configurations by target:
 
-| Need | Fabric 1.21.11 and older | Fabric 26.1 and newer | LexForge Legacy | LexForge | NeoForge |
-|------|---------------------------|------------------------|-----------------|----------|----------|
-| Code imports dependency classes | `modImplementation(...)` | `implementation(...)` | `implementation(...)` | `implementation(...)` | `implementation(...)` |
-| Local `runClient` / `runServer` only | `modRuntimeOnly(...)` | `runtimeOnly(...)` | `modRuntimeOnly(...)` | `runtimeOnly(...)` | `runtimeOnly(...)` |
-| GitHub Actions runtime test must install the jar | `ciRuntimeMods(...)` | `ciRuntimeMods(...)` | `ciRuntimeMods(...)` | `ciRuntimeMods(...)` | `ciRuntimeMods(...)` |
-| Code imports it and CI must install it | compile dependency plus `ciRuntimeMods(...)` | compile dependency plus `ciRuntimeMods(...)` | compile dependency plus `ciRuntimeMods(...)` | compile dependency plus `ciRuntimeMods(...)` | compile dependency plus `ciRuntimeMods(...)` |
+| Target | Code imports dependency classes | Local `runClient` / `runServer` only |
+|--------|---------------------------------|----------------------------------------|
+| Fabric 1.21.11 and older | `modImplementation(...)` | `modRuntimeOnly(...)` |
+| LexForge Legacy | `implementation(...)` | `modRuntimeOnly(...)` |
+| Fabric 26.1 and newer, LexForge, NeoForge | `implementation(...)` | `runtimeOnly(...)` |
+
+CI runtime staging is the same for every target. Use `ciRuntimeMods(...)` when
+the GitHub Actions runtime test must install the jar. If the code also imports
+the dependency, combine it with the compile dependency from the table above.
 
 `ciRuntimeMods` does not affect local `runClient` / `runServer` classpaths. It only stages direct jar
 files into each configured project directory's `build/ciRuntimeMods` for the GitHub Actions runtime
@@ -261,6 +273,22 @@ These conventions wire the `config` and `configClient` outputs into the jar and 
 
 Fabric 1.18.2-1.19.2 uses the archived `net.minecraftforge:forgeconfigapiport-fabric` artifact, which has no separate common artifact. Keep `VersionedConfigSpec` and other Forge Config API Port bindings in the Fabric project's `src/config`; `fabric-legacy-config-conventions` consumes the neutral declarations from root `common` and treats `<minecraft>/common/src/config` as optional. Do not apply it together with `fabric-config-conventions`.
 
+The config spec family is selected by Minecraft version, not by the loader that
+ultimately registers it:
+
+| Minecraft | Config-enabled platforms | Config spec family |
+|-----------|--------------------------|--------------------|
+| 1.18.2-1.19.2 | Fabric, LexForge Legacy | LexForge-style `ForgeConfigSpec` |
+| 1.20.1 | Fabric, LexForge Legacy | LexForge-style `ForgeConfigSpec` |
+| 1.21.1 | Fabric, LexForge, NeoForge | NeoForge-style `ModConfigSpec` |
+| 1.21.8-1.21.11 | Fabric, LexForge | NeoForge-style `ModConfigSpec` |
+| 26.x | Fabric, NeoForge | NeoForge-style `ModConfigSpec` |
+
+The standalone 1.7.10 Forge project does not use this shared config
+abstraction. On Fabric and modern LexForge, Forge Config API Port adapts the
+selected spec family to the target loader; it does not change which family
+`VersionedConfigSpec` builds.
+
 The builder supports primitive values, ranged numbers, strings, lists, enums,
 and nested sections. Consecutive `comment(...)` calls are joined with newlines
 and applied to the next entry or category. Use `translation(...)` to assign an
@@ -283,47 +311,48 @@ import java.util.List;
 public final class ServerConfig {
     private static final ConfigEntryBuilder BUILDER = new ConfigEntryBuilder();
 
-    public static final ConfigEntry.BooleanEntry ENABLE_FEATURE =
-            BUILDER.comment("Enable the main server feature.")
-                    .define("enableFeature", true);
+    public static final ConfigEntry.BooleanEntry ENABLE_FEATURE = BUILDER
+            .comment("Enable the main server feature.")
+            .define("enableFeature", true);
 
-    public static final ConfigEntry.IntEntry MAX_STORED_ITEMS =
-            BUILDER.comment("Maximum number of stored items.")
-                    .defineInRange("maxStoredItems", 64, 1, 4096);
+    public static final ConfigEntry.IntEntry MAX_STORED_ITEMS = BUILDER
+            .comment("Maximum number of stored items.")
+            .defineInRange("maxStoredItems", 64, 1, 4096);
 
-    public static final ConfigEntry.ListEntry<String> ALLOWED_ITEMS =
-            BUILDER.comment("Item ids accepted by the feature.")
-                    .defineList(
-                            "allowedItems",
-                            List.of("minecraft:stone"),
-                            () -> "minecraft:stone",
-                            value -> value instanceof String);
+    public static final ConfigEntry.ListEntry<String> ALLOWED_ITEMS = BUILDER
+            .comment("Item ids accepted by the feature.")
+            .defineList(
+                    "allowedItems",
+                    List.of("minecraft:stone"),
+                    () -> "minecraft:stone",
+                    value -> value instanceof String
+            );
 
-    public static final ConfigEntries ADVANCED =
-            BUILDER.comment("Advanced server settings.")
-                    .category("advanced", Advanced.ENTRIES);
+    public static final ConfigEntries ADVANCED = BUILDER
+            .comment("Advanced server settings.")
+            .category("advanced", Advanced.ENTRIES);
 
     public static final class Advanced {
         private static final ConfigEntryBuilder BUILDER = new ConfigEntryBuilder();
 
-        public static final ConfigEntry.BooleanEntry ENABLE_DEBUG_LOG =
-                BUILDER.comment("Enable additional debug logging.")
-                        .define("enableDebugLog", false);
+        public static final ConfigEntry.BooleanEntry ENABLE_DEBUG_LOG = BUILDER
+                .comment("Enable additional debug logging.")
+                .define("enableDebugLog", false);
 
-        public static final ConfigEntry.DoubleEntry SPAWN_RATE_MULTIPLIER =
-                BUILDER.comment("Multiplier applied to spawn rate.")
-                        .defineInRange("spawnRateMultiplier", 1.0D, 0.0D, 10.0D);
+        public static final ConfigEntry.DoubleEntry SPAWN_RATE_MULTIPLIER = BUILDER
+                .comment("Multiplier applied to spawn rate.")
+                .defineInRange("spawnRateMultiplier", 1.0D, 0.0D, 10.0D);
 
-        public static final ConfigEntries PERFORMANCE =
-                BUILDER.comment("Performance tuning.")
-                        .category("performance", Performance.ENTRIES);
+        public static final ConfigEntries PERFORMANCE = BUILDER
+                .comment("Performance tuning.")
+                .category("performance", Performance.ENTRIES);
 
         public static final class Performance {
             private static final ConfigEntryBuilder BUILDER = new ConfigEntryBuilder();
 
-            public static final ConfigEntry.IntEntry CACHE_SIZE =
-                    BUILDER.comment("Maximum cache size.")
-                            .defineInRange("cacheSize", 256, 0, 8192);
+            public static final ConfigEntry.IntEntry CACHE_SIZE = BUILDER
+                    .comment("Maximum cache size.")
+                    .defineInRange("cacheSize", 256, 0, 8192);
 
             public static final ConfigEntries ENTRIES = BUILDER.build();
         }
@@ -379,7 +408,7 @@ The common config declarations are loader-neutral. Each platform provides the de
 |------------------------|-------------------------------------------------------|--------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
 | NeoForge platforms     | NeoForge config API from the loader                   | `ModContainer#registerConfig`                    | none; the config screen is provided by NeoForge directly                                                                                                 |
 | LexForge Legacy platforms | Forge config API from the loader                   | `ModLoadingContext` / `FMLJavaModLoadingContext` | [Configured](https://www.curseforge.com/minecraft/mc-mods/configured) or [Forge Config Screens](https://modrinth.com/mod/forge-config-screens)           |
-| LexForge platforms     | Forge Config API Port                                | Forge Config API Port registry                   | none bundled                                                                                                                                            |
+| LexForge platforms     | Forge Config API Port                                | Forge Config API Port registry                   | none; Forge Config API Port does not bundle a screen, and Configured does not recognize its NeoForge-style specs                                        |
 | Fabric platforms       | Forge Config API Port, declared per Minecraft version | Forge Config API Port registry                   | [ModMenu](https://modrinth.com/mod/modmenu/) for the mod list entry; [Forge Config Screens](https://modrinth.com/mod/forge-config-screens) on <=mc1.20.1 |
 
 Because of this, the same `ConfigDeclaration` list can be shared from `common`, extended by a version-specific common project, and then bound by each platform to the dependency it actually runs with.
@@ -446,6 +475,108 @@ are ready. Release notes include breaking changes, `feat`, `fix`, and `perf`
 commits. Template maintenance commits with the `mdk` type and other commit
 types are omitted.
 
+### CurseForge And Modrinth Publishing
+
+The separate `Publish` workflow copies the jars and release notes from an
+existing GitHub Release to CurseForge, Modrinth, or both. It is a dry run by
+default and can publish all platform projects or a comma-separated subset such
+as `1.20.1-fabric,1.21.1-neo`.
+
+Before publishing:
+
+```kotlin
+modPublishing {
+    curseForge {
+        projectId.set("123456")
+        client.set(true)
+        server.set(true)
+    }
+    modrinth {
+        projectId.set("project-slug")
+        environment.set(CLIENT_AND_SERVER)
+    }
+}
+```
+
+1. In the root `build.gradle.kts` `modPublishing` block, uncomment and fill the
+   `projectId` for each destination service you plan to select.
+2. For each selected service, review CurseForge's `client` and `server` flags
+   or Modrinth's typed `environment` value in the same block. These describe
+   where the mod can be installed; they cannot be inferred reliably from loader
+   build settings. In particular, Modrinth distinguishes `CLIENT_AND_SERVER`
+   (required on both sides) from `CLIENT_OR_SERVER` (installable on either side
+   independently).
+3. For a non-dry-run publish, add the [GitHub Actions repository secret](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets#creating-secrets-for-a-repository)
+   required by each selected service: `CURSEFORGE_TOKEN` and/or
+   `MODRINTH_TOKEN`.
+4. Create a GitHub Release with the `Release` workflow before running
+   `Publish` for its tag.
+
+To run the Publish workflow:
+
+1. Open **Actions** > **Publish** > **Run workflow** on GitHub.
+2. Select the target GitHub Release tag from **Use workflow from**. Do not
+   select a branch.
+3. Choose the destination services and other publishing options, then run the
+   workflow.
+
+Artifact names, Minecraft versions, loader names, Java versions, optional
+sources jars, and convention-provided publishing dependencies are derived from
+each project's `platformArtifacts` metadata. `fabric-api-conventions` registers
+Fabric API, while the Fabric and modern LexForge config conventions register
+Forge Config API Port.
+
+Publishing dependencies are CurseForge and Modrinth project-page relations.
+They do not configure Gradle dependencies, runtime installation, or loader
+metadata; configure those separately as described in [Dependencies](#dependencies).
+
+Declare relations under `platformArtifacts` at the top level of each affected
+platform subproject's `build.gradle.kts`. Platform convention plugins create the
+extension automatically; in the 1.7.10 project, place the block after
+`configurePlatformArtifacts`.
+
+Pass one slug when both services use the same value. Use a configuration block
+when the slugs differ or the relation applies to only one service:
+
+```kotlin
+import net.meatwo310.mdk.build.platformArtifacts
+
+platformArtifacts {
+    publishingDependencies {
+        required("same-slug-on-both-services")
+        optional {
+            curseForge = "dependency-curseforge-slug"
+            modrinth = "dependency-modrinth-slug"
+        }
+        required {
+            modrinth = "modrinth-only-dependency"
+        }
+    }
+}
+```
+
+Available relation types are `required`, `optional`, `incompatible`, and
+`embedded`. `embedded` declares that the dependency is already included; it
+does not package the dependency into the artifact.
+
+To inspect one target locally without uploading, run:
+
+```sh
+./gradlew publishMods \
+  -PpublishGitHubRepository=owner/repository \
+  -PpublishTag=v1.0.0 \
+  -PpublishProjects=1.21.1-fabric \
+  -PpublishDestination=modrinth \
+  -PpublishDryRun=true
+```
+
+Public GitHub Releases need no additional authentication. Set `GITHUB_TOKEN`
+when downloading from a private repository or when authenticated API access is
+otherwise required.
+
+Use a checkout whose `version.txt` and enabled projects match the selected
+release. Dry-run reports are written under `build/publishMods/`.
+
 ## Receiving Upstream Updates
 
 Repositories created with GitHub's **Use this template** button do not share Git
@@ -453,7 +584,7 @@ history with this template repository. If you want to keep receiving upstream
 template updates, connect the matching upstream template commit to your
 downstream history before you start regular development.
 
-Add this template repository as an upstream remote:
+Add this template repository as an `upstream` remote:
 
 ```sh
 git remote add upstream https://github.com/Meatwo310/custom-mdk.git

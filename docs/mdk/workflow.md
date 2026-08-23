@@ -99,6 +99,22 @@ For CI matrix or project inclusion changes:
 cat build/ci/build-matrix.json
 ```
 
+For publishing changes, configure a dry run against an existing GitHub Release
+and limit it to one platform while iterating:
+
+```bash
+./gradlew publishMods \
+  -PpublishGitHubRepository=owner/repository \
+  -PpublishTag=v1.0.0 \
+  -PpublishProjects=1.21.1-fabric \
+  -PpublishDestination=modrinth \
+  -PpublishDryRun=true
+```
+
+The build downloads release metadata and assets directly through the GitHub
+REST API. Public releases require no local GitHub CLI or token; set
+`GITHUB_TOKEN` for private repositories or authenticated API access.
+
 For Forge or NeoForge game test server support:
 
 ```bash
@@ -127,6 +143,8 @@ must have:
   `ciRequiresCommon=false`;
 - a numeric `javaVersion` when set;
 - buildable jars under the configured project directory's `build/libs`;
+- `platformArtifacts` metadata naming the main jar task and, when generated,
+  the sources jar task;
 - optional runtime jars staged by `collectCiRuntimeMods`.
 
 Run `writeCiBuildMatrix` whenever those assumptions might have changed.

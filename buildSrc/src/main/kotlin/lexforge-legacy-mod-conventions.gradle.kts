@@ -29,6 +29,7 @@ val commonProject = ":$minecraftVersion-common"
 val sharedCommonProject = ":common"
 evaluationDependsOn(sharedCommonProject)
 configureCiRuntimeMods()
+configurePlatformArtifacts(loader = "forge", javaVersion = 17, sourcesJarTaskName = "sourcesJar")
 
 dependencies {
     implementation(project(commonProject))

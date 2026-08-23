@@ -8,7 +8,6 @@ plugins {
     id("net.minecraftforge.gradle") apply false
     id("net.neoforged.moddev") apply false
     id("net.neoforged.moddev.legacyforge") apply false
-    id("mod-publish-conventions")
 }
 
 tasks.named<Wrapper>("wrapper").configure {

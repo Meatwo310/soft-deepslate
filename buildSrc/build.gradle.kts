@@ -11,7 +11,6 @@ repositories {
 }
 
 dependencies {
-    implementation(libs.mod.publish.plugin)
     implementation(libs.neoforged.moddev.gradle)
     implementation(libs.forgegradle.plugin)
     implementation(libs.fabric.loom)

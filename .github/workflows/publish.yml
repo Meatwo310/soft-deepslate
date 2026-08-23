@@ -25,10 +25,6 @@ on:
           - stable
           - beta
           - alpha
-      projects:
-        description: Comma-separated Gradle projects; empty publishes all
-        required: false
-        type: string
       dry_run:
         description: Prepare and inspect files without uploading
         required: true
@@ -67,20 +63,14 @@ jobs:
           PUBLISH_TAG: ${{ inputs.tag }}
           PUBLISH_DESTINATION: ${{ inputs.destination }}
           PUBLISH_RELEASE_TYPE: ${{ inputs.release_type }}
-          PUBLISH_PROJECTS: ${{ inputs.projects }}
           PUBLISH_DRY_RUN: ${{ inputs.dry_run }}
         run: |
           chmod u+x ./gradlew
-          publish_args=(
-            "-PpublishTag=$PUBLISH_TAG"
-            "-PpublishDestination=$PUBLISH_DESTINATION"
-            "-PpublishReleaseType=$PUBLISH_RELEASE_TYPE"
+          ./gradlew --no-daemon publishMods \
+            "-PpublishTag=$PUBLISH_TAG" \
+            "-PpublishDestination=$PUBLISH_DESTINATION" \
+            "-PpublishReleaseType=$PUBLISH_RELEASE_TYPE" \
             "-PpublishDryRun=$PUBLISH_DRY_RUN"
-          )
-          if [[ -n "$PUBLISH_PROJECTS" ]]; then
-            publish_args+=("-PpublishProjects=$PUBLISH_PROJECTS")
-          fi
-          ./gradlew --no-daemon --continue publishMods "${publish_args[@]}"
 
       - name: Upload dry-run report
         if: ${{ inputs.dry_run }}
